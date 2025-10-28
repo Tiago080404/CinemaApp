@@ -50,8 +50,10 @@ public class ReservationService {
 
 
         //max10 sizte reservieren
-        if (checkReservationAmount(reservationDTO.getSeats().size())) {
-
+        if (!checkReservationAmount(reservationDTO.getSeats().size())) {
+            Map<String,Object> response = new HashMap<>();
+            response.put("Can only buy 10 tickets",reservationDTO.getSeats().size());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
         }
 
 
