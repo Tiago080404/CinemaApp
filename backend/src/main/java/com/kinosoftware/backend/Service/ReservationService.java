@@ -46,7 +46,7 @@ public class ReservationService {
 
 
         //7 tage in der zukunft max
-        //min. 1 Stunde in der zukunft
+        //vorsttelung min. 1 Stunde in der zukunft
 
 
         //max10 sizte reservieren
