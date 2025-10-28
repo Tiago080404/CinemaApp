@@ -1,5 +1,6 @@
 package com.kinosoftware.backend.Service;
 
+import com.kinosoftware.backend.DTO.GetMovieSeatsResponseDTO;
 import com.kinosoftware.backend.DTO.ReservationDTO;
 import com.kinosoftware.backend.DTO.SeatsDTO;
 import com.kinosoftware.backend.Entity.*;
@@ -7,10 +8,12 @@ import com.kinosoftware.backend.Repository.MovieRepository;
 import com.kinosoftware.backend.Repository.ReservationRepository;
 import com.kinosoftware.backend.Repository.ReservationSeatsRepository;
 import com.kinosoftware.backend.Repository.SeatsRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -30,19 +33,58 @@ public class ReservationService {
     }
 
     public ResponseEntity<?> buyMovieTicekts(ReservationDTO reservationDTO) {
+
+        Map<Integer, Integer> hall = new HashMap<>();
+        hall.put(1, 375);
+        hall.put(2, 500);
+        hall.put(3, 150);
+
+        Movie movie = movieRepository.findById(reservationDTO.getMovieId()).orElseThrow(() -> new RuntimeException("Movie not found"));
+        System.out.println("Halllll" + movie.getHall().getHallId());
+        Long hallId = movie.getHall().getHallId();
+        Integer changedHallIdType = Math.toIntExact(hallId);
+
+
+        //7 tage in der zukunft max
+        //min. 1 Stunde in der zukunft
+
+
+        //max10 sizte reservieren
+        if (checkReservationAmount(reservationDTO.getSeats().size())) {
+
+        }
+
+
+        //sitze frei sind done!!!
+        List<GetMovieSeatsResponseDTO> movieSeatsResponseDTO = reservationRepository.getMovieSeats(reservationDTO.getMovieId());
+        System.out.println(movieSeatsResponseDTO);
+        int availableSeats = hall.get(changedHallIdType);
+        for (GetMovieSeatsResponseDTO movieDto : movieSeatsResponseDTO) {
+            System.out.println(movieDto.getTitel() + movieDto.getRow_num() + movieDto.getSeat_num());
+            availableSeats--;
+        }
+        System.out.println(availableSeats);
+        //test case:
+        int testAvailable = availableSeats - 365;
+        if (testAvailable - reservationDTO.getSeats().size() <= 0) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("Message", "This amount is not available");
+            response.put("Amount", reservationDTO.getSeats().size());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+        }
+
+
         Reservation reservation = new Reservation();
         reservation.setCustomerName(reservationDTO.getCustomerName());
         reservation.setReservationTime(reservationDTO.getReservationTime());
 
-        Movie movie = movieRepository.findById(reservationDTO.getMovieId()).orElseThrow(() -> new RuntimeException("Movie not found"));
-
+        //Movie movie = movieRepository.findById(reservationDTO.getMovieId()).orElseThrow(() -> new RuntimeException("Movie not found"));
         reservation.setMovieId(movie);
 
         reservationRepository.save(reservation);
 
 
         System.out.println(movie.getHall());
-
 
 
         for (SeatsDTO i : reservationDTO.getSeats()) {
@@ -57,7 +99,6 @@ public class ReservationService {
             seatsRepository.save(seats);
             System.out.println(seats.getStatus());
             reservationSeats.setReservationID(reservation);
-            reservationSeats.setSeatId(seats);
             reservationSeatsRepository.save(reservationSeats);
         }
 
@@ -65,5 +106,12 @@ public class ReservationService {
 
         response.put("Saved new Movie buy", reservationDTO);
         return ResponseEntity.ok().body(response);
+    }
+
+    public boolean checkReservationAmount(int ticketsAmount) {
+        if (ticketsAmount > 10) {
+            return false;
+        }
+        return true;
     }
 }
