@@ -48,10 +48,12 @@ public class ReservationService {
         //7 tage in der zukunft max
         //vorsttelung min. 1 Stunde in der zukunft
         System.out.println(movie.getMovieDate());
+        System.out.println(reservationDTO.getReservationTime());
         int reservationHour = reservationDTO.getReservationTime().getHour();
-        int movieHour = movie.getMovieDate().getHours();
+        int movieHour = movie.getMovieDate().getHour();
         int reservationDate = reservationDTO.getReservationTime().getDayOfMonth();
-        int movieDate = movie.getMovieDate().getHours();
+        int movieDate = movie.getMovieDate().getDayOfMonth();
+        System.out.println("reservation"+movieHour+reservationHour+"and date"+reservationDate+movieDate);
         if (movieHour - reservationHour <= 1 && movieDate == reservationDate) {
             Map<String, Object> response = new HashMap<>();
             response.put("Cant buy tickets one hour before movie starting", reservationDTO.getReservationTime());

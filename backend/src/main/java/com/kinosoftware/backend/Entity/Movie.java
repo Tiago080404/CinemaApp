@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -20,7 +21,7 @@ public class Movie {
     private String titel;
 
     @Column(name = "movie_date")
-    private Date movieDate;
+    private LocalDateTime movieDate;
 
     @ManyToOne
     @JoinColumn(name = "hall")

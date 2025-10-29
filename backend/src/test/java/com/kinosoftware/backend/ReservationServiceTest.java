@@ -49,11 +49,11 @@ public class ReservationServiceTest {
     }
 
     @Test
-    void buyTicket(){
+    void buyTicket() {
         Movie movie = new Movie();
         movie.setMovieId(1L);
         movie.setTitel("Inception");
-        movie.setMovieDate(new Date(System.currentTimeMillis() + 2 * 60 * 60 * 1000)); // +2 Stunden
+        movie.setMovieDate(LocalDateTime.now());
         Hall hall = new Hall();
         hall.setHallId(1L);
         movie.setHall(hall);
@@ -72,11 +72,11 @@ public class ReservationServiceTest {
     }
 
     @Test
-    void moreThanTenTickets(){
+    void moreThanTenTickets() {
         Movie movie = new Movie();
         movie.setMovieId(2L);
         movie.setTitel("Inception");
-        movie.setMovieDate(new Date(System.currentTimeMillis() + 2 * 60 * 60 * 1000));
+        movie.setMovieDate(LocalDateTime.now());
         Hall hall = new Hall();
         hall.setHallId(2L);
         hall.setTotalRows(20);
@@ -93,10 +93,36 @@ public class ReservationServiceTest {
 
         ArrayList<SeatsDTO> toManySeats = new ArrayList<>();
 
-        for(int i=0; i<11;i++){
-            toManySeats.add(new SeatsDTO(1,i+1));
+        for (int i = 0; i < 11; i++) {
+            toManySeats.add(new SeatsDTO(1, i + 1));
         }
         dto.setSeats(toManySeats);
+
+        ResponseEntity<?> response = reservationService.buyMovieTicekts(dto);
+
+        assertEquals(403, response.getStatusCodeValue());
+    }
+
+    @Test
+    void toLateForReservate() {
+        Movie movie = new Movie();
+        movie.setMovieId(3L);
+        movie.setTitel("badmovie");
+        movie.setMovieDate(LocalDateTime.now());
+        Hall hall = new Hall();
+        hall.setHallId(2L);
+        hall.setTotalRows(20);
+        hall.setSeatsPerRow(25);
+        movie.setHall(hall);
+
+        when(movieRepository.findById(3L)).thenReturn(Optional.of(movie));
+
+        ReservationDTO dto = new ReservationDTO();
+        dto.setMovieId(3L);
+        dto.setReservationTime(LocalDateTime.now());
+
+        dto.setCustomerName("tiago");
+        dto.setSeats(List.of(new SeatsDTO(1, 1), new SeatsDTO(1, 2)));
 
         ResponseEntity<?> response = reservationService.buyMovieTicekts(dto);
 
