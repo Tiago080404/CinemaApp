@@ -47,12 +47,20 @@ public class ReservationService {
 
         //7 tage in der zukunft max
         //vorsttelung min. 1 Stunde in der zukunft
-
-
+        System.out.println(movie.getMovieDate());
+        int reservationHour = reservationDTO.getReservationTime().getHour();
+        int movieHour = movie.getMovieDate().getHours();
+        int reservationDate = reservationDTO.getReservationTime().getDayOfMonth();
+        int movieDate = movie.getMovieDate().getHours();
+        if (movieHour - reservationHour <= 1 && movieDate == reservationDate) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("Cant buy tickets one hour before movie starting", reservationDTO.getReservationTime());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+        }
         //max10 sizte reservieren
         if (!checkReservationAmount(reservationDTO.getSeats().size())) {
-            Map<String,Object> response = new HashMap<>();
-            response.put("Can only buy 10 tickets",reservationDTO.getSeats().size());
+            Map<String, Object> response = new HashMap<>();
+            response.put("Can only buy 10 tickets", reservationDTO.getSeats().size());
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
         }
 
@@ -65,10 +73,10 @@ public class ReservationService {
             System.out.println(movieDto.getTitel() + movieDto.getRow_num() + movieDto.getSeat_num());
             availableSeats--;
         }
-        System.out.println(availableSeats);
+        System.out.println("seats available"+availableSeats);
         //test case:
-        int testAvailable = availableSeats - 365;
-        if (testAvailable - reservationDTO.getSeats().size() <= 0) {
+        //int testAvailable = availableSeats - 365;
+        if (availableSeats - reservationDTO.getSeats().size() <= 0) {
             Map<String, Object> response = new HashMap<>();
             response.put("Message", "This amount is not available");
             response.put("Amount", reservationDTO.getSeats().size());
@@ -99,8 +107,11 @@ public class ReservationService {
             seats.setSeatNum(i.getSeat_num());
             seats.setStatus(Status.Booked);
             seatsRepository.save(seats);
-            System.out.println(seats.getStatus());
+
+
             reservationSeats.setReservationID(reservation);
+            reservationSeats.setSeatId(seats);
+
             reservationSeatsRepository.save(reservationSeats);
         }
 

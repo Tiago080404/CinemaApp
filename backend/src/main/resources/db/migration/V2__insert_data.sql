@@ -1,1 +1,0 @@
-INSERT INTO movie (titel, movie_date, hall) VALUES('movietest', '2025-11-29T20:30:00', 2);
