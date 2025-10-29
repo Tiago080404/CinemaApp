@@ -63,7 +63,7 @@ public class ReservationServiceTest {
         ReservationDTO dto = new ReservationDTO();
         dto.setMovieId(1L);
         dto.setCustomerName("Max Mustermann");
-        dto.setReservationTime(LocalDateTime.now());
+        dto.setReservationTime(LocalDateTime.now().minusMinutes(120));
         dto.setSeats(List.of(new SeatsDTO(1, 1), new SeatsDTO(1, 2)));
 
         ResponseEntity<?> response = reservationService.buyMovieTicekts(dto);

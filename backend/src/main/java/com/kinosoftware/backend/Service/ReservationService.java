@@ -45,7 +45,6 @@ public class ReservationService {
         Integer changedHallIdType = Math.toIntExact(hallId);
 
 
-        //7 tage in der zukunft max
         //vorsttelung min. 1 Stunde in der zukunft
         System.out.println(movie.getMovieDate());
         System.out.println(reservationDTO.getReservationTime());
@@ -53,12 +52,20 @@ public class ReservationService {
         int movieHour = movie.getMovieDate().getHour();
         int reservationDate = reservationDTO.getReservationTime().getDayOfMonth();
         int movieDate = movie.getMovieDate().getDayOfMonth();
+        int movieMonth = movie.getMovieDate().getMonthValue();
+        int reservationMonth = reservationDTO.getReservationTime().getMonthValue();
         System.out.println("reservation"+movieHour+reservationHour+"and date"+reservationDate+movieDate);
-        if (movieHour - reservationHour <= 1 && movieDate == reservationDate) {
+        if (movieHour - reservationHour <= 1 && movieDate == reservationDate&&movieMonth == reservationMonth) {
             Map<String, Object> response = new HashMap<>();
             response.put("Cant buy tickets one hour before movie starting", reservationDTO.getReservationTime());
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
         }
+
+        //7 tage in der zukunft maxx
+
+
+
+
         //max10 sizte reservieren
         if (!checkReservationAmount(reservationDTO.getSeats().size())) {
             Map<String, Object> response = new HashMap<>();
