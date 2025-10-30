@@ -27,8 +27,8 @@ public class Seats {
     @Column(name = "seat_num")
     private int seatNum;
 
-    @Column(name = "status")
-    @Enumerated(EnumType.STRING)
-    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
-    private Status status;
+//    @Column(name = "status")
+//    @Enumerated(EnumType.STRING)
+//    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+//    private Status status;
 }
