@@ -1,6 +1,5 @@
 package com.kinosoftware.backend.Service;
 
-import com.kinosoftware.backend.DTO.GetMovieSeatsResponseDTO;
 import com.kinosoftware.backend.DTO.ReservationDTO;
 import com.kinosoftware.backend.DTO.SeatsDTO;
 import com.kinosoftware.backend.Entity.*;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Service
@@ -34,20 +32,7 @@ public class ReservationService {
 
     public ResponseEntity<?> buyMovieTicekts(ReservationDTO reservationDTO) {
         //sitze frei
-        ArrayList<Map> bookedSeats = new ArrayList<>();
-        for (SeatsDTO seats : reservationDTO.getSeats()) {
-            System.out.println(seats.getSeat_num());
-            Status seatStatus = reservationSeatsRepository.checkAvaialbleSeats(reservationDTO.getMovieId(), seats.getRow_num(), seats.getSeat_num());
-            System.out.println("statusss" + seatStatus);
-            if (seatStatus == null) {
-                continue;
-            }
-            if (seatStatus.toString() == Status.Booked.toString()) {
-                Map<Integer, Integer> bookedSeatsMap = new HashMap<>();
-                bookedSeatsMap.put(seats.getRow_num(), seats.getSeat_num());
-                bookedSeats.add(bookedSeatsMap);
-            }
-        }
+        ArrayList<Map> bookedSeats = checkSeatsAvailable(reservationDTO);
         if (bookedSeats.size() != 0) {
             Map<String, Object> response = new HashMap<>();
             for (int i = 0; i < bookedSeats.size(); i++) {
@@ -74,33 +59,15 @@ public class ReservationService {
         //vorsttelung min. 1 Stunde in der zukunft
         System.out.println(movie.getMovieDate());
         System.out.println(reservationDTO.getReservationTime());
-        int reservationHour = reservationDTO.getReservationTime().getHour();
-        int movieHour = movie.getMovieDate().getHour();
 
-        int reservationDate = reservationDTO.getReservationTime().getDayOfMonth();
-        int movieDate = movie.getMovieDate().getDayOfMonth();
-
-        int movieMonth = movie.getMovieDate().getMonthValue();
-        int reservationMonth = reservationDTO.getReservationTime().getMonthValue();
-        System.out.println("reservation" + movieHour + reservationHour + "and date" + reservationDate + movieDate);
-        if (movieHour - reservationHour <= 1 && movieDate == reservationDate && movieMonth == reservationMonth) {
+        if (!oneHourInFuture(reservationDTO, movie)) {
             Map<String, Object> response = new HashMap<>();
             response.put("Cant buy tickets one hour before movie starting", reservationDTO.getReservationTime());
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
         }
 
-        //7 tage in der zukunft maxx
-        System.out.println("dates");
-        System.out.println(movieDate);
-        System.out.println(reservationDate);
-        System.out.println(movieDate - reservationDate);
-        if (movieDate - reservationDate > 7) {
-            Map<String, Object> response = new HashMap<>();
-            response.put("Cant buy tickets more than 7 days before the movie", reservationDTO.getReservationTime());
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
-        }
 
-        if (movieMonth != reservationMonth) {//hier vllt noch für ungleiches jahr
+        if (!sevenDaysInFuture(reservationDTO, movie)) {
             Map<String, Object> response = new HashMap<>();
             response.put("Cant buy tickets more than 7 days before the movie", reservationDTO.getReservationTime());
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
@@ -159,6 +126,56 @@ public class ReservationService {
         if (ticketsAmount > 10) {
             return false;
         }
+        return true;
+    }
+
+    public ArrayList<Map> checkSeatsAvailable(ReservationDTO reservationDTO) {
+        ArrayList<Map> bookedSeats = new ArrayList<>();
+        for (SeatsDTO seats : reservationDTO.getSeats()) {
+            Status seatStatus = reservationSeatsRepository.checkAvaialbleSeats(reservationDTO.getMovieId(), seats.getRow_num(), seats.getSeat_num());
+            System.out.println("statusss" + seatStatus);
+            if (seatStatus == null) {
+                continue;
+            }
+            if (seatStatus.toString() == Status.Booked.toString()) {
+                Map<Integer, Integer> bookedSeatsMap = new HashMap<>();
+                bookedSeatsMap.put(seats.getRow_num(), seats.getSeat_num());
+                bookedSeats.add(bookedSeatsMap);
+            }
+        }
+        return bookedSeats;
+    }
+
+    public boolean oneHourInFuture(ReservationDTO reservationDTO, Movie movie) {
+        int reservationHour = reservationDTO.getReservationTime().getHour();
+        int movieHour = movie.getMovieDate().getHour();
+
+        int reservationDate = reservationDTO.getReservationTime().getDayOfMonth();
+        int movieDate = movie.getMovieDate().getDayOfMonth();
+
+        int movieMonth = movie.getMovieDate().getMonthValue();
+        int reservationMonth = reservationDTO.getReservationTime().getMonthValue();
+
+        if (movieHour - reservationHour <= 1 && movieDate == reservationDate && movieMonth == reservationMonth) {
+            return false;
+        }
+        return true;
+    }
+
+    public boolean sevenDaysInFuture(ReservationDTO reservationDTO, Movie movie) {
+        int reservationDate = reservationDTO.getReservationTime().getDayOfMonth();
+        int movieDate = movie.getMovieDate().getDayOfMonth();
+
+        int movieMonth = movie.getMovieDate().getMonthValue();
+        int reservationMonth = reservationDTO.getReservationTime().getMonthValue();
+        System.out.println(movieDate - reservationDate);
+        if (movieDate - reservationDate > 7) {
+            return false;
+        }
+        if (movieMonth != reservationMonth) {//hier vllt noch für ungleiches jahr
+            return false;
+        }
+
         return true;
     }
 }
