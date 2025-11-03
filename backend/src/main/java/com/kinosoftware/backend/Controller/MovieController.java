@@ -3,10 +3,12 @@ package com.kinosoftware.backend.Controller;
 import com.kinosoftware.backend.Entity.Movie;
 import com.kinosoftware.backend.Service.MovieService;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/movie")
@@ -21,5 +23,11 @@ public class MovieController {
     @GetMapping
     public List<Movie> getAllMovies(){
         return movieService.getAllMovies();
+    }
+
+    @GetMapping("/{movieId}")
+    public Optional<Movie> getMovieById(@PathVariable Long movieId){
+        System.out.println(movieId);
+        return movieService.getMovieById(movieId);
     }
 }

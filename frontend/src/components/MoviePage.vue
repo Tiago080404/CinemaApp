@@ -12,11 +12,12 @@ export default {
   methods: {
     async getMovieById() {
       try {
-        const response = await fetch("http://localhost:8080/movie", {
+        const response = await fetch(`http://localhost:8080/movie/${this.id}`, {
           method: "GET",
           headers: { "Content-Type": "application/json" },
         });
         const data = await response.json();
+        console.log(data)
       } catch (err) {
         console.log(err);
       }
