@@ -34,30 +34,30 @@ public class ReservationService {
 
     public ResponseEntity<?> buyMovieTicekts(ReservationDTO reservationDTO) {
         //sitze frei
-//        ArrayList<Map> bookedSeats = new ArrayList<>();
-//        for (SeatsDTO seats : reservationDTO.getSeats()) {
-//            System.out.println(seats.getSeat_num());
-//            Status seatStatus = reservationSeatsRepository.checkAvaialbleSeats(reservationDTO.getMovieId(), seats.getRow_num(), seats.getSeat_num());
-//            System.out.println("statusss" + seatStatus);
-//            if (seatStatus==null){
-//                continue;
-//            }
-//            if (seatStatus.toString() == Status.Booked.toString()) {
-//                Map<Integer, Integer> bookedSeatsMap = new HashMap<>();
-//                bookedSeatsMap.put(seats.getRow_num(), seats.getSeat_num());
-//                bookedSeats.add(bookedSeatsMap);
-//            }
-//        }
-//        if (bookedSeats.size() != 0) {
-//            Map<String, Object> response = new HashMap<>();
-//            for(int i=0;i<bookedSeats.size();i++){
-//
-//                response.put("Seats are not available",bookedSeats.get(i));
-//
-//            }
-//            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
-//
-//        }
+        ArrayList<Map> bookedSeats = new ArrayList<>();
+        for (SeatsDTO seats : reservationDTO.getSeats()) {
+            System.out.println(seats.getSeat_num());
+            Status seatStatus = reservationSeatsRepository.checkAvaialbleSeats(reservationDTO.getMovieId(), seats.getRow_num(), seats.getSeat_num());
+            System.out.println("statusss" + seatStatus);
+            if (seatStatus == null) {
+                continue;
+            }
+            if (seatStatus.toString() == Status.Booked.toString()) {
+                Map<Integer, Integer> bookedSeatsMap = new HashMap<>();
+                bookedSeatsMap.put(seats.getRow_num(), seats.getSeat_num());
+                bookedSeats.add(bookedSeatsMap);
+            }
+        }
+        if (bookedSeats.size() != 0) {
+            Map<String, Object> response = new HashMap<>();
+            for (int i = 0; i < bookedSeats.size(); i++) {
+
+                response.put("Seats are not available", bookedSeats.get(i));
+
+            }
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+
+        }
 
 
         Map<Integer, Integer> hall = new HashMap<>();
@@ -131,7 +131,7 @@ public class ReservationService {
         for (SeatsDTO i : reservationDTO.getSeats()) {
             MovieSeatStatus movieSeatStatus = new MovieSeatStatus();
 
-            Seats seats = seatsRepository.findbySeatAndRowNum(i.getRow_num(),i.getSeat_num());
+            Seats seats = seatsRepository.findbySeatAndRowNum(i.getRow_num(), i.getSeat_num());
 
 
             ReservationSeats reservationSeats = new ReservationSeats();
@@ -140,7 +140,6 @@ public class ReservationService {
             movieSeatStatus.setMovieId(movie);
             movieSeatStatus.setSeatId(seats);
             movieSeatStatus.setStatus(Status.Booked);
-
 
 
             reservationSeats.setReservationID(reservation);
