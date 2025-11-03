@@ -7,12 +7,7 @@ export default {
   data() {
     return {};
   },
-  emits: ["movie"],
-  methods: {
-    goToMovie(movie) {
-      console.log(movie);
-    },
-  },
+  methods: {},
 };
 </script>
 
@@ -20,7 +15,7 @@ export default {
   <div
     class="min-h-screen min-w-screen bg-linear-to-br from-gray-900 via-gray-800 to-black text-white overflow-hidden"
   >
-    <HallRoom @movie="goToMovie"></HallRoom>
+    <RouterView></RouterView>
   </div>
 </template>
 <style scoped></style>
