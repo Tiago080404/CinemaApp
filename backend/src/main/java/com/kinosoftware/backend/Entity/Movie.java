@@ -1,5 +1,6 @@
 package com.kinosoftware.backend.Entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,6 +22,7 @@ public class Movie {
     private String titel;
 
     @Column(name = "movie_date")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime movieDate;
 
     @ManyToOne
