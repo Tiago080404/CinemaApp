@@ -9,6 +9,8 @@ export default {
   data() {
     return {
       seats: {},
+      clickedSeatsNum: 0,
+      clickedSeatsArray: [],
     };
   },
   methods: {
@@ -33,7 +35,6 @@ export default {
         }
       );
       const data = await response.json();
-      console.log(data);
       await this.changeTheData(data);
     },
     async changeTheData(data) {
@@ -48,37 +49,59 @@ export default {
       let seatsArray = [];
       for (let i = 0; i < data.length; i++) {
         let seatAndStatus = {};
-        console.log(
-          "row",
-          data[i].rowNum,
-          "seat",
-          data[i].seatNum,
-          data[i].status
-        );
+
         if (data[i].rowNum > currentRowNum) {
-          console.log("changed", seatAndStatus, "seatsarray", seatsArray);
-          //console.log("roooownum",data[i].rowNum)
           seatObj[currentRowNum] = seatsArray;
           seatsArray = [];
 
           currentRowNum++;
-          //seatAndStatus = {};
         }
-        console.log(
-          data[i].seatNum,
-          "und status",
-          data[i].status,
-          seatAndStatus
-        );
+
         seatAndStatus[data[i].seatNum] = data[i].status;
-        console.log("status object", seatAndStatus);
         seatsArray.push(seatAndStatus);
-        console.log("sitze", seatsArray);
       }
       seatObj[currentRowNum] = seatsArray;
-      console.log(seatObj);
       this.seats = seatObj;
+      console.log(this.seats)
+    },
+    async reservateSeats() {
+      console.log(this.clickedSeatsArray);
+    },
+    changeSeatStatus(seatIndex, rowIndex) {
+      let clickedSeats = {};
+      const row = this.seats[rowIndex];
+      const seat = row[seatIndex];
+      const seatNum = Object.keys(seat)[0];
+      const currentStatus = seat[seatNum];
+      console.log(
+        `Reihe ${rowIndex}, SitzNummer ${seatNum}, Status:`,
+        currentStatus
+      );
+      if (currentStatus === "Booked") {
+        alert("Cant book a seat that is already booked");
+        return;
+      }
+      if (currentStatus === null) {
+        if (this.clickedSeatsNum === 10) {
+          alert("Can only reservate 10 seats");
+          return;
+        }
+        this.clickedSeatsNum += 1;
+        seat[seatNum] = "onHold";
+        clickedSeats["row_num"] = rowIndex;
+        clickedSeats["seat_num"] = seatNum;
+        console.log(clickedSeats);
+        this.clickedSeatsArray.push(clickedSeats);
+      } else {
+        this.clickedSeatsNum -= 1;
+        seat[seatNum] = null;
 
+        let deleteItem = this.clickedSeatsArray.filter(
+          (item) => item.row_num === rowIndex && item.seat_num === seatNum
+        );
+        this.clickedSeatsArray.pop(deleteItem);
+        console.log(clickedSeats);
+      }
     },
   },
   async mounted() {
@@ -108,14 +131,18 @@ export default {
         :key="seatIndex"
         :class="[
           'w-10 h-10 flex flex-col justify-center items-center rounded-lg text-xs font-bold cursor-pointer transition-all',
-          seat[seatIndex + 1] == null
+          seat[seatIndex + 1] === 'onHold'
+            ? 'bg-blue-600 hover:bg-blue-500'
+            : seat[seatIndex + 1] == null
             ? 'bg-green-600 hover:bg-green-400'
             : 'bg-red-600 hover:bg-red-400',
         ]"
+        @click="changeSeatStatus(seatIndex, rowIndex)"
       >
         {{ seatIndex + 1 }}
       </div>
       <p>Reihe{{ rowIndex }}</p>
     </div>
+    <button @click="reservateSeats">reservate</button>
   </div>
 </template>
