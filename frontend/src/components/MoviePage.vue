@@ -35,73 +35,85 @@ export default {
         }
       );
       const data = await response.json();
-      await this.changeTheData(data);
+      console.log(data);
+      await this.newTry(data);
     },
-    async changeTheData(data) {
-      /*
-    {1:
-        [{seatnum:booked}
-           ]
-             }
-        */
-      let currentRowNum = 1;
+
+    async newTry(data) {
       let seatObj = {};
-      let seatsArray = [];
+      let currentSeatsForRow = {};
+      let currentRowNum = 1;
       for (let i = 0; i < data.length; i++) {
-        let seatAndStatus = {};
-
+        console.log(data[i]);
         if (data[i].rowNum > currentRowNum) {
-          seatObj[currentRowNum] = seatsArray;
-          seatsArray = [];
-
+          seatObj[currentRowNum] = currentSeatsForRow;
           currentRowNum++;
+          currentSeatsForRow = {};
         }
-
-        seatAndStatus[data[i].seatNum] = data[i].status;
-        seatsArray.push(seatAndStatus);
+        currentSeatsForRow[data[i].seatNum] = data[i].status;
+        console.log(currentSeatsForRow);
       }
-      seatObj[currentRowNum] = seatsArray;
+      console.log(currentRowNum);
+      seatObj[currentRowNum] = currentSeatsForRow;
+      console.log(currentSeatsForRow);
+      console.log(seatObj);
       this.seats = seatObj;
-      console.log(this.seats)
     },
+
     async reservateSeats() {
       console.log(this.clickedSeatsArray);
+      try {
+        const response = await fetch("http://localhost:8080/reservate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            customerName: "Timversuch",
+            reservationTime: new Date(),
+            movieId: this.id,
+            seats: this.clickedSeatsArray,
+          }),
+        });
+        const data = await response.json();
+        console.log("res", data);
+        if (response.ok) {
+          await this.getAllSeatsFromMovie();
+        }
+      } catch (err) {
+        console.log(err);
+      }
     },
     changeSeatStatus(seatIndex, rowIndex) {
-      let clickedSeats = {};
+      console.log(rowIndex, seatIndex);
+      let clickedSeat = {};
       const row = this.seats[rowIndex];
-      const seat = row[seatIndex];
-      const seatNum = Object.keys(seat)[0];
-      const currentStatus = seat[seatNum];
-      console.log(
-        `Reihe ${rowIndex}, SitzNummer ${seatNum}, Status:`,
-        currentStatus
-      );
-      if (currentStatus === "Booked") {
-        alert("Cant book a seat that is already booked");
+      const currentSeatStatus = row[seatIndex];
+
+      if (currentSeatStatus === "Booked") {
+        alert("already booked");
         return;
       }
-      if (currentStatus === null) {
-        if (this.clickedSeatsNum === 10) {
-          alert("Can only reservate 10 seats");
+
+      if (currentSeatStatus === null) {
+        this.clickedSeatsNum++;
+        if (this.clickedSeatsNum > 10) {
+          alert("only ten");
           return;
         }
-        this.clickedSeatsNum += 1;
-        seat[seatNum] = "onHold";
-        clickedSeats["row_num"] = rowIndex;
-        clickedSeats["seat_num"] = seatNum;
-        console.log(clickedSeats);
-        this.clickedSeatsArray.push(clickedSeats);
+        row[seatIndex] = "onHold";
+        console.log(this.seats[rowIndex]);
+        clickedSeat["row_num"] = rowIndex;
+        clickedSeat["seat_num"] = seatIndex;
+        this.clickedSeatsArray.push(clickedSeat);
       } else {
+        row[seatIndex] = null;
         this.clickedSeatsNum -= 1;
-        seat[seatNum] = null;
-
-        let deleteItem = this.clickedSeatsArray.filter(
-          (item) => item.row_num === rowIndex && item.seat_num === seatNum
+        const itemToDelete = this.clickedSeatsArray.filter(
+          (item) => item.seat_num === seatIndex && item.rom_num === rowIndex
         );
-        this.clickedSeatsArray.pop(deleteItem);
-        console.log(clickedSeats);
+        this.clickedSeatsArray.pop(itemToDelete);
+        console.log(this.clickedSeatsArray);
       }
+      console.log("aktuelle geklickte", this.clickedSeatsNum);
     },
   },
   async mounted() {
@@ -114,7 +126,6 @@ export default {
   <!-- leinwand -->
   <!-- seats -->
   <!-- reihe -->
-
   <div class="flex flex-col items-center p-8 min-h-screen">
     <div
       class="h-6 w-1/4 bg-gray-500 mb-8 shadow-2xl rounded-2xl text-center text-black"
@@ -131,15 +142,15 @@ export default {
         :key="seatIndex"
         :class="[
           'w-10 h-10 flex flex-col justify-center items-center rounded-lg text-xs font-bold cursor-pointer transition-all',
-          seat[seatIndex + 1] === 'onHold'
+          seat === 'onHold'
             ? 'bg-blue-600 hover:bg-blue-500'
-            : seat[seatIndex + 1] == null
+            : seat == null
             ? 'bg-green-600 hover:bg-green-400'
             : 'bg-red-600 hover:bg-red-400',
         ]"
         @click="changeSeatStatus(seatIndex, rowIndex)"
       >
-        {{ seatIndex + 1 }}
+        {{ seatIndex }}
       </div>
       <p>Reihe{{ rowIndex }}</p>
     </div>
