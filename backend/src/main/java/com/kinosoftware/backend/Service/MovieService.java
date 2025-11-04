@@ -1,5 +1,6 @@
 package com.kinosoftware.backend.Service;
 
+import com.kinosoftware.backend.DTO.AllSeatsForMovieDTO;
 import com.kinosoftware.backend.Entity.Movie;
 import com.kinosoftware.backend.Repository.MovieRepository;
 import org.springframework.stereotype.Service;
@@ -21,5 +22,9 @@ public class MovieService {
 
     public Optional<Movie> getMovieById(Long id){
         return movieRepository.findById(id);
+    }
+
+    public List<AllSeatsForMovieDTO> getAllSeatsForMovie(Long id){
+        return movieRepository.getAllSeatsFromMovie(id);
     }
 }
