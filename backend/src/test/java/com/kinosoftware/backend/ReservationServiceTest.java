@@ -83,7 +83,7 @@ public class ReservationServiceTest {
         dto.setMovieId(1L);
         dto.setCustomerName("Max Mustermann");
         dto.setReservationTime(LocalDateTime.now().minusMinutes(120));
-        dto.setSeats(List.of(new SeatsDTO(1, 1), new SeatsDTO(1, 2)));
+        dto.setSeats(Arrays.asList(new SeatsDTO(1, 1), new SeatsDTO(1, 2)));
 
         ResponseEntity<?> response = reservationService.buyMovieTicekts(dto);
 
@@ -141,7 +141,7 @@ public class ReservationServiceTest {
         dto.setReservationTime(LocalDateTime.now());
 
         dto.setCustomerName("tiago");
-        dto.setSeats(List.of(new SeatsDTO(1, 1), new SeatsDTO(1, 2)));
+        dto.setSeats(Arrays.asList(new SeatsDTO(1, 1), new SeatsDTO(1, 2)));
 
         ResponseEntity<?> response = reservationService.buyMovieTicekts(dto);
 
@@ -166,7 +166,7 @@ public class ReservationServiceTest {
         dto.setReservationTime(LocalDateTime.now());
         dto.setMovieId(3L);
         dto.setCustomerName("tiago");
-        dto.setSeats(List.of(new SeatsDTO(1, 1), new SeatsDTO(1, 2)));
+        dto.setSeats(Collections.unmodifiableList(Arrays.asList(new SeatsDTO(1, 1), new SeatsDTO(1, 2))));
 
         ResponseEntity<?> response = reservationService.buyMovieTicekts(dto);
 
@@ -204,7 +204,7 @@ public class ReservationServiceTest {
         dto.setReservationTime(LocalDateTime.now());
         dto.setMovieId(3L);
         dto.setCustomerName("tiago");
-        dto.setSeats(List.of(new SeatsDTO(1, 1), new SeatsDTO(1, 2)));
+        dto.setSeats(Arrays.asList(new SeatsDTO(1, 1), new SeatsDTO(1, 2)));
 
         ResponseEntity<?> response = reservationService.buyMovieTicekts(dto);
 
