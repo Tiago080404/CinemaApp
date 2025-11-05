@@ -67,7 +67,7 @@ export default {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            customerName: "Timversuch",
+            customerName: "jonatan",
             reservationTime: new Date(),
             movieId: this.id,
             seats: this.clickedSeatsArray,
