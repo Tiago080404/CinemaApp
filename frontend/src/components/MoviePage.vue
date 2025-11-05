@@ -127,6 +127,9 @@ export default {
   <!-- seats -->
   <!-- reihe -->
   <div class="flex flex-col items-center p-8 min-h-screen">
+    <div class="absolute right-5">
+      <p>Seats you have clicked: {{ this.clickedSeatsNum }}</p>
+    </div>
     <div
       class="h-6 w-1/4 bg-gray-500 mb-8 shadow-2xl rounded-2xl text-center text-black"
     >
@@ -154,6 +157,11 @@ export default {
       </div>
       <p>Reihe{{ rowIndex }}</p>
     </div>
-    <button @click="reservateSeats">reservate</button>
+    <button
+      @click="reservateSeats"
+      class="bg-blue-600 rounded-lg w-24 hover:bg-blue-500 hover:cursor-pointer"
+    >
+      reservate
+    </button>
   </div>
 </template>
