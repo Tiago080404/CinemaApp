@@ -30,7 +30,7 @@ public class ReservationService {
         this.movieSeatsStatusRepository = movieSeatsStatusRepository;
     }
 
-    public ResponseEntity<?> buyMovieTicekts(ReservationDTO reservationDTO) {
+    public ReservationDTO buyMovieTicekts(ReservationDTO reservationDTO) {
         //sitze frei
         ArrayList<Map> bookedSeats = checkSeatsAvailable(reservationDTO);
         if (bookedSeats.size() != 0) {
@@ -40,8 +40,7 @@ public class ReservationService {
                 response.put("Seats are not available", bookedSeats.get(i));
 
             }
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
-
+            return null;
         }
 
 
@@ -61,24 +60,18 @@ public class ReservationService {
         System.out.println(reservationDTO.getReservationTime());
 
         if (!oneHourInFuture(reservationDTO, movie)) {
-            Map<String, Object> response = new HashMap<>();
-            response.put("Cant buy tickets one hour before movie starting", reservationDTO.getReservationTime());
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+            return null;
         }
 
 
         if (!sevenDaysInFuture(reservationDTO, movie)) {
-            Map<String, Object> response = new HashMap<>();
-            response.put("Cant buy tickets more than 7 days before the movie", reservationDTO.getReservationTime());
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+            return null;
         }
 
 
         //max10 sizte reservieren
         if (!checkReservationAmount(reservationDTO.getSeats().size())) {
-            Map<String, Object> response = new HashMap<>();
-            response.put("Can only buy 10 tickets", reservationDTO.getSeats().size());
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+            return null;
         }
 
 
@@ -115,11 +108,7 @@ public class ReservationService {
             reservationSeatsRepository.save(reservationSeats);
             movieSeatsStatusRepository.save(movieSeatStatus);
         }
-
-        Map<String, Object> response = new HashMap<>();
-
-        response.put("Saved new Movie buy", reservationDTO);
-        return ResponseEntity.ok().body(response);
+        return reservationDTO;
     }
 
     public boolean checkReservationAmount(int ticketsAmount) {

@@ -11,13 +11,11 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -85,9 +83,8 @@ public class ReservationServiceTest {
         dto.setReservationTime(LocalDateTime.now().minusMinutes(120));
         dto.setSeats(Arrays.asList(new SeatsDTO(1, 1), new SeatsDTO(1, 2)));
 
-        ResponseEntity<?> response = reservationService.buyMovieTicekts(dto);
-
-        assertEquals(200, response.getStatusCodeValue());
+        ReservationDTO response = reservationService.buyMovieTicekts(dto);
+        assertEquals(dto,response);
     }
 
     @Test
@@ -117,9 +114,8 @@ public class ReservationServiceTest {
         }
         dto.setSeats(toManySeats);
 
-        ResponseEntity<?> response = reservationService.buyMovieTicekts(dto);
-
-        assertEquals(403, response.getStatusCodeValue());
+        ReservationDTO response = reservationService.buyMovieTicekts(dto);
+        assertEquals(null,response);
     }
 
     @Test
@@ -143,9 +139,8 @@ public class ReservationServiceTest {
         dto.setCustomerName("tiago");
         dto.setSeats(Arrays.asList(new SeatsDTO(1, 1), new SeatsDTO(1, 2)));
 
-        ResponseEntity<?> response = reservationService.buyMovieTicekts(dto);
-
-        assertEquals(403, response.getStatusCodeValue());
+        ReservationDTO response = reservationService.buyMovieTicekts(dto);
+        assertEquals(null,response);
     }
 
     @Test
@@ -168,10 +163,8 @@ public class ReservationServiceTest {
         dto.setCustomerName("tiago");
         dto.setSeats(Collections.unmodifiableList(Arrays.asList(new SeatsDTO(1, 1), new SeatsDTO(1, 2))));
 
-        ResponseEntity<?> response = reservationService.buyMovieTicekts(dto);
-
-        assertEquals(403, response.getStatusCodeValue());
-
+        ReservationDTO response = reservationService.buyMovieTicekts(dto);
+        assertEquals(null,response);
     }
 
     @Test
@@ -206,10 +199,9 @@ public class ReservationServiceTest {
         dto.setCustomerName("tiago");
         dto.setSeats(Arrays.asList(new SeatsDTO(1, 1), new SeatsDTO(1, 2)));
 
-        ResponseEntity<?> response = reservationService.buyMovieTicekts(dto);
+        ReservationDTO response = reservationService.buyMovieTicekts(dto);
 
-        assertEquals(403, response.getStatusCodeValue());
-        assertTrue(response.getBody().toString().contains("Seats are not available"));
+        assertEquals(null, response);
 
 
         verify(reservationRepository, never()).save(any());
