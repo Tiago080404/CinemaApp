@@ -5,6 +5,7 @@ import com.kinosoftware.backend.DTO.SeatsDTO;
 import com.kinosoftware.backend.Entity.*;
 import com.kinosoftware.backend.Repository.*;
 import com.kinosoftware.backend.Service.ReservationService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+@Slf4j
 public class ReservationServiceTest {
 
     @Mock
@@ -203,6 +205,7 @@ public class ReservationServiceTest {
 
         assertEquals(null, response);
 
+        log.info("logging hfdshf");
 
         verify(reservationRepository, never()).save(any());
         verify(seatsRepository, never()).save(any());
