@@ -33,6 +33,6 @@ public class ReservationController {
 
         response.put("message", "Reservated tickets");
         response.put("Reservation", reservationDTO);
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }
