@@ -5,12 +5,7 @@ It is designed to provide a **simple**, **intuitive**, and **efficient** experie
 
 ---
 
-## 🖼️ Preview
 
-Here’s a sneak peek of Cinefy in action 👇
-
-![Cinefy Screenshot](./frontend/src/assets/StartPage.png)
-![Cinefy Screenshot](./frontend/src/assets/MovieReservationPage.png)
 
 ---
 
