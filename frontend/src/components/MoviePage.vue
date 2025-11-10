@@ -12,6 +12,7 @@ export default {
       clickedSeatsNum: 0,
       clickedSeatsArray: [],
       username: "",
+      seatsLoaded: false,
     };
   },
   methods: {
@@ -59,6 +60,7 @@ export default {
       console.log(currentSeatsForRow);
       console.log(seatObj);
       this.seats = seatObj;
+      this.seatsLoaded = true;
     },
 
     async reservateSeats() {
@@ -137,6 +139,9 @@ export default {
       class="h-6 w-1/4 bg-gray-500 mb-8 shadow-2xl rounded-2xl text-center text-black"
     >
       Leinwand
+    </div>
+    <div v-if="seatsLoaded === false">
+      <img src="../assets/homergif.gif" width="200" alt="" />
     </div>
     <div
       v-for="(row, rowIndex) in seats"
