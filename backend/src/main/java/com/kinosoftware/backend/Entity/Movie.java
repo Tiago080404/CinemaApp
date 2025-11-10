@@ -15,6 +15,7 @@ import java.util.Date;
 public class Movie {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "movie_id")
     private Long movieId;
 
