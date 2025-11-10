@@ -1,6 +1,7 @@
 package com.kinosoftware.backend.Controller;
 
 import com.kinosoftware.backend.DTO.ReservationDTO;
+import com.kinosoftware.backend.DTO.response.ReservationResponse;
 import com.kinosoftware.backend.Service.ReservationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,7 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<?> buyMovieTickets(@RequestBody ReservationDTO reservationDTO) {
-        ReservationDTO reservation = reservationService.buyMovieTicekts(reservationDTO);
+        ReservationResponse reservation = reservationService.buyMovieTicekts(reservationDTO);
         Map<String, Object> response = new HashMap<>();
         if (reservation == null) {
 

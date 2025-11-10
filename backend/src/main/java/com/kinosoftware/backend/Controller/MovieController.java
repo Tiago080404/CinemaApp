@@ -1,6 +1,7 @@
 package com.kinosoftware.backend.Controller;
 
 import com.kinosoftware.backend.DTO.AllSeatsForMovieDTO;
+import com.kinosoftware.backend.DTO.response.MovieResponse;
 import com.kinosoftware.backend.Entity.Movie;
 import com.kinosoftware.backend.Service.MovieService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,7 +28,7 @@ public class MovieController {
     }
 
     @GetMapping("/{movieId}")
-    public Optional<Movie> getMovieById(@PathVariable Long movieId){
+    public Optional<MovieResponse> getMovieById(@PathVariable Long movieId){
         System.out.println(movieId);
         return movieService.getMovieById(movieId);
     }

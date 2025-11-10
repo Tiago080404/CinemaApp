@@ -1,6 +1,7 @@
 package com.kinosoftware.backend.Service;
 
 import com.kinosoftware.backend.DTO.AllSeatsForMovieDTO;
+import com.kinosoftware.backend.DTO.response.MovieResponse;
 import com.kinosoftware.backend.Entity.Movie;
 import com.kinosoftware.backend.Repository.MovieRepository;
 import org.springframework.stereotype.Service;
@@ -20,8 +21,13 @@ public class MovieService {
         return movieRepository.findAll();
     }
 
-    public Optional<Movie> getMovieById(Long id){
-        return movieRepository.findById(id);
+    public Optional<MovieResponse> getMovieById(Long id){
+        return movieRepository.findById(id).map(movie -> new MovieResponse(
+                movie.getMovieId(),
+                movie.getTitel(),
+                movie.getMovieDate(),
+                movie.getHall()
+        ));
     }
 
     public List<AllSeatsForMovieDTO> getAllSeatsForMovie(Long id){

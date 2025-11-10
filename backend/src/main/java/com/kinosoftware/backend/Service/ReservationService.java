@@ -2,13 +2,16 @@ package com.kinosoftware.backend.Service;
 
 import com.kinosoftware.backend.DTO.ReservationDTO;
 import com.kinosoftware.backend.DTO.SeatsDTO;
+import com.kinosoftware.backend.DTO.response.ReservationResponse;
 import com.kinosoftware.backend.Entity.*;
 import com.kinosoftware.backend.Repository.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,7 +33,7 @@ public class ReservationService {
         this.movieSeatsStatusRepository = movieSeatsStatusRepository;
     }
 
-    public ReservationDTO buyMovieTicekts(ReservationDTO reservationDTO) {
+    public ReservationResponse buyMovieTicekts(ReservationDTO reservationDTO) {
         //sitze frei
         ArrayList<Map> bookedSeats = checkSeatsAvailable(reservationDTO);
         if (bookedSeats.size() != 0) {
@@ -108,7 +111,15 @@ public class ReservationService {
             reservationSeatsRepository.save(reservationSeats);
             movieSeatsStatusRepository.save(movieSeatStatus);
         }
-        return reservationDTO;
+        //ReservationResponse reservationResponse;
+        //reservationDTO.map()
+        return new ReservationResponse(
+                reservationDTO.getCustomerName(),
+                reservationDTO.getReservationTime(),
+                reservationDTO.getMovieId(),
+                reservationDTO.getSeats()
+        );
+        //return reservationDTO;
     }
 
     public boolean checkReservationAmount(int ticketsAmount) {
