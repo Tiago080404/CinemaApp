@@ -37,6 +37,12 @@ export default {
         });
         await response.json();
         if (response.ok) {
+          this.$toast.open({
+            message: "New movie added!",
+            type: "success",
+            position: "top-right",
+            duration: 3000,
+          });
           console.log("New movie added");
         }
       } catch (err) {
@@ -53,7 +59,7 @@ export default {
   <div class="relative">
     <div
       v-if="newMovieInsert"
-      class="fixed inset-0 flex justify-center items-center  bg-linear-to-br from-gray-900 via-gray-800 to-black z-50"
+      class="fixed inset-0 flex justify-center items-center bg-linear-to-br from-gray-900 via-gray-800 to-black z-50"
     >
       <div class="bg-white text-black p-6 rounded-xl shadow-lg w-96">
         <button
