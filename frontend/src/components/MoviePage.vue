@@ -80,10 +80,19 @@ export default {
         console.log("res", data);
         if (response.ok) {
           await this.getAllSeatsFromMovie();
+          this.show();
         }
       } catch (err) {
         console.log(err);
       }
+    },
+    show() {
+      this.$toast.open({
+        message: "Booked!",
+        type: "success",
+        position: "top-right",
+        duration: 3000,
+      });
     },
     changeSeatStatus(seatIndex, rowIndex) {
       console.log(rowIndex, seatIndex);
