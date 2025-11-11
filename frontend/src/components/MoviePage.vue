@@ -78,15 +78,27 @@ export default {
         });
         const data = await response.json();
         console.log("res", data);
+        this.clickedSeatsNum = 0;
         if (response.ok) {
           await this.getAllSeatsFromMovie();
-          this.show();
+          this.showSuccessMessage();
+        } else {
+          await this.getAllSeatsFromMovie();
+          this.showFailMessage();
         }
       } catch (err) {
         console.log(err);
       }
     },
-    show() {
+    showFailMessage() {
+      this.$toast.open({
+        message: "Could not book!",
+        type: "error",
+        position: "top-right",
+        duration: 3000,
+      });
+    },
+    showSuccessMessage() {
       this.$toast.open({
         message: "Booked!",
         type: "success",
