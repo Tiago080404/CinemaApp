@@ -113,14 +113,24 @@ export default {
       const currentSeatStatus = row[seatIndex];
 
       if (currentSeatStatus === "Booked") {
-        alert("already booked");
+        this.$toast.open({
+          message: "Already booked!",
+          type: "error",
+          position: "top-right",
+          duration: 3000,
+        });
         return;
       }
 
       if (currentSeatStatus === null) {
         this.clickedSeatsNum++;
         if (this.clickedSeatsNum > 10) {
-          alert("only ten");
+          this.$toast.open({
+            message: "Only 10 tickets for 1 reservation!",
+            type: "error",
+            position: "top-right",
+            duration: 3000,
+          });
           return;
         }
         row[seatIndex] = "onHold";
