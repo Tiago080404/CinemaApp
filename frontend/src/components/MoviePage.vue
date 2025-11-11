@@ -37,7 +37,7 @@ export default {
         }
       );
       const data = await response.json();
-      console.log(data);
+      //console.log(data);
       await this.newTry(data);
     },
 
@@ -46,19 +46,19 @@ export default {
       let currentSeatsForRow = {};
       let currentRowNum = 1;
       for (let i = 0; i < data.length; i++) {
-        console.log(data[i]);
+        //console.log(data[i]);
         if (data[i].rowNum > currentRowNum) {
           seatObj[currentRowNum] = currentSeatsForRow;
           currentRowNum++;
           currentSeatsForRow = {};
         }
         currentSeatsForRow[data[i].seatNum] = data[i].status;
-        console.log(currentSeatsForRow);
+        //console.log(currentSeatsForRow);
       }
-      console.log(currentRowNum);
+      //console.log(currentRowNum);
       seatObj[currentRowNum] = currentSeatsForRow;
-      console.log(currentSeatsForRow);
-      console.log(seatObj);
+      //console.log(currentSeatsForRow);
+      //console.log(seatObj);
       this.seats = seatObj;
       this.seatsLoaded = true;
     },
@@ -81,26 +81,27 @@ export default {
         this.clickedSeatsNum = 0;
         if (response.ok) {
           await this.getAllSeatsFromMovie();
-          this.showSuccessMessage();
+          this.showSuccessMessage(data.message);
         } else {
+          console.log(data.message)
+          this.showFailMessage(data.message);
           await this.getAllSeatsFromMovie();
-          this.showFailMessage();
         }
       } catch (err) {
         console.log(err);
       }
     },
-    showFailMessage() {
+    showFailMessage(msg) {
       this.$toast.open({
-        message: "Could not book!",
+        message: msg,
         type: "error",
         position: "top-right",
         duration: 3000,
       });
     },
-    showSuccessMessage() {
+    showSuccessMessage(msg) {
       this.$toast.open({
-        message: "Booked!",
+        message: msg,
         type: "success",
         position: "top-right",
         duration: 3000,

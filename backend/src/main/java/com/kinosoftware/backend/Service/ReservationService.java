@@ -3,6 +3,7 @@ package com.kinosoftware.backend.Service;
 import com.kinosoftware.backend.DTO.ReservationDTO;
 import com.kinosoftware.backend.DTO.SeatsDTO;
 import com.kinosoftware.backend.DTO.response.ReservationResponse;
+import com.kinosoftware.backend.DTO.response.SeatsNotAvailableException;
 import com.kinosoftware.backend.Entity.*;
 import com.kinosoftware.backend.Repository.*;
 import org.springframework.http.HttpStatus;
@@ -43,7 +44,7 @@ public class ReservationService {
                 response.put("Seats are not available", bookedSeats.get(i));
 
             }
-            return null;
+            throw new SeatsNotAvailableException("Seats are not available");
         }
 
 
@@ -63,18 +64,19 @@ public class ReservationService {
         System.out.println(reservationDTO.getReservationTime());
 
         if (!oneHourInFuture(reservationDTO, movie)) {
-            return null;
+            throw new SeatsNotAvailableException("Movie is in one hour cant book anymore!");
+
         }
 
 
         if (!sevenDaysInFuture(reservationDTO, movie)) {
-            return null;
+            throw new SeatsNotAvailableException("Movie is in more than 7 days cant book!");
         }
 
 
         //max10 sizte reservieren
         if (!checkReservationAmount(reservationDTO.getSeats().size())) {
-            return null;
+            throw new SeatsNotAvailableException("Cant book more than 10 seats!");
         }
 
 

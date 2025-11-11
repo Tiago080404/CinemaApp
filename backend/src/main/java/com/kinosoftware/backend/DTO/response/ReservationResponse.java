@@ -1,14 +1,14 @@
 package com.kinosoftware.backend.DTO.response;
 
 import com.kinosoftware.backend.DTO.SeatsDTO;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Getter
-@Setter
+@Data
 public class ReservationResponse {
     private String customerName;
     private LocalDateTime reservationTime;
