@@ -2,6 +2,7 @@ package com.kinosoftware.backend;
 
 import com.kinosoftware.backend.DTO.ReservationDTO;
 import com.kinosoftware.backend.DTO.SeatsDTO;
+import com.kinosoftware.backend.DTO.response.ReservationResponse;
 import com.kinosoftware.backend.Entity.*;
 import com.kinosoftware.backend.Repository.*;
 import com.kinosoftware.backend.Service.ReservationService;
@@ -85,7 +86,7 @@ public class ReservationServiceTest {
         dto.setReservationTime(LocalDateTime.now().minusMinutes(120));
         dto.setSeats(Arrays.asList(new SeatsDTO(1, 1), new SeatsDTO(1, 2)));
 
-        ReservationDTO response = reservationService.buyMovieTicekts(dto);
+        ReservationResponse response = reservationService.buyMovieTicekts(dto);
         assertEquals(dto,response);
     }
 
@@ -116,7 +117,7 @@ public class ReservationServiceTest {
         }
         dto.setSeats(toManySeats);
 
-        ReservationDTO response = reservationService.buyMovieTicekts(dto);
+        ReservationResponse response = reservationService.buyMovieTicekts(dto);
         assertEquals(null,response);
     }
 
@@ -141,7 +142,7 @@ public class ReservationServiceTest {
         dto.setCustomerName("tiago");
         dto.setSeats(Arrays.asList(new SeatsDTO(1, 1), new SeatsDTO(1, 2)));
 
-        ReservationDTO response = reservationService.buyMovieTicekts(dto);
+        ReservationResponse response = reservationService.buyMovieTicekts(dto);
         assertEquals(null,response);
     }
 
@@ -165,7 +166,7 @@ public class ReservationServiceTest {
         dto.setCustomerName("tiago");
         dto.setSeats(Collections.unmodifiableList(Arrays.asList(new SeatsDTO(1, 1), new SeatsDTO(1, 2))));
 
-        ReservationDTO response = reservationService.buyMovieTicekts(dto);
+        ReservationResponse response = reservationService.buyMovieTicekts(dto);
         assertEquals(null,response);
     }
 
@@ -201,7 +202,7 @@ public class ReservationServiceTest {
         dto.setCustomerName("tiago");
         dto.setSeats(Arrays.asList(new SeatsDTO(1, 1), new SeatsDTO(1, 2)));
 
-        ReservationDTO response = reservationService.buyMovieTicekts(dto);
+        ReservationResponse response = reservationService.buyMovieTicekts(dto);
 
         assertEquals(null, response);
 

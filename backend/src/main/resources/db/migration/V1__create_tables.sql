@@ -1,8 +1,20 @@
+create type seat_status as enum(
+'Available',
+'Booked'
+);
+
 CREATE TABLE hall
 (
     id            serial primary key,
     total_rows    int,
     seats_per_row int
+);
+create table movie
+(
+    movie_id   serial primary key,
+    titel      varchar(255),
+    movie_date Date,
+    hall       int references hall (id) on delete cascade
 );
 
 create table seats
@@ -29,18 +41,8 @@ CREATE TABLE reservation_seats
     PRIMARY KEY (reservation_id, seat_id)
 );
 
-create table movie
-(
-    movie_id   serial primary key,
-    titel      varchar(255),
-    movie_date Date,
-    hall       int references hall (id) on delete cascade
-);
 
-create type seat_status as enum(
-'Available',
-'Booked'
-);
+
 
 insert into hall(total_rows,seats_per_row) values(15,25);
 insert into hall(total_rows,seats_per_row) values(20,25);

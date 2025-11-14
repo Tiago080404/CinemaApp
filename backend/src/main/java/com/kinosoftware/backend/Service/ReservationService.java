@@ -170,6 +170,7 @@ public class ReservationService {
 
         int movieMonth = movie.getMovieDate().getMonthValue();
         int reservationMonth = reservationDTO.getReservationTime().getMonthValue();
+        System.out.println("minus");
         System.out.println(movieDate - reservationDate);
         if (movieDate - reservationDate > 7) {
             return false;

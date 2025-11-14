@@ -30,7 +30,7 @@ dependencies {
     runtimeOnly(libs.org.postgresql.postgresql)
     testImplementation(libs.org.springframework.boot.spring.boot.starter.test)
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-
+    testImplementation("org.testcontainers:postgresql")
 }
 
 
