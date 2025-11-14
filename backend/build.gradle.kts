@@ -27,6 +27,7 @@ dependencies {
     implementation(libs.org.flywaydb.flyway.core)
     implementation(libs.org.flywaydb.flyway.database.postgresql)
     implementation(libs.org.springdoc.springdoc.openapi.starter.webmvc.ui)
+    implementation("org.springframework.boot:spring-boot-starter-mail")
     runtimeOnly(libs.org.postgresql.postgresql)
     testImplementation(libs.org.springframework.boot.spring.boot.starter.test)
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")

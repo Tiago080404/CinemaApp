@@ -11,10 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class ReservationService {
@@ -180,5 +177,17 @@ public class ReservationService {
         }
 
         return true;
+    }
+
+    public int getAllReservations() {
+        List<Reservation> reservations = reservationRepository.findAll();
+
+        int reservationSize = reservations.size();
+        return reservationSize;
+    }
+
+    public int thisDayReservations(){
+    List<Reservation> reservations = reservationRepository.reservationToday();
+    return reservations.size();
     }
 }

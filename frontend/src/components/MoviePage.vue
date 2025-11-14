@@ -82,8 +82,9 @@ export default {
         if (response.ok) {
           await this.getAllSeatsFromMovie();
           this.showSuccessMessage(data.message);
+          this.clickedSeatsArray = [];
         } else {
-          console.log(data.message)
+          console.log(data.message);
           this.showFailMessage(data.message);
           await this.getAllSeatsFromMovie();
         }
