@@ -53,12 +53,10 @@ export default {
           currentSeatsForRow = {};
         }
         currentSeatsForRow[data[i].seatNum] = data[i].status;
-        //console.log(currentSeatsForRow);
       }
-      //console.log(currentRowNum);
+
       seatObj[currentRowNum] = currentSeatsForRow;
-      //console.log(currentSeatsForRow);
-      //console.log(seatObj);
+
       this.seats = seatObj;
       this.seatsLoaded = true;
     },
