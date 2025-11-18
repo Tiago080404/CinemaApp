@@ -11,4 +11,6 @@ public interface MovieRepository extends JpaRepository<Movie,Long> {
 
     @Query(value = "select m.movie_id,mss.status as status,s.* from movie m join hall h on m.hall =h.id left join seats s on h.id =s.hall_id left join movie_seat_status mss on s.seats_id = mss.seat_id and m.movie_id =mss.movie_id where m.movie_id =?1",nativeQuery = true)
     List<AllSeatsForMovieDTO> getAllSeatsFromMovie(Long id);
+
+    List<Movie> findByTitel(String titel);
 }

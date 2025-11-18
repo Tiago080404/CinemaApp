@@ -48,4 +48,9 @@ public class MovieController {
         response.put("movie",newMovieDTO);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
+    @GetMapping("/getnew/movies")
+    public void getNewMovies(){
+        movieService.getMoviesForWeek();
+    }
 }

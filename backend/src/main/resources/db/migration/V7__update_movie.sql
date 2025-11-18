@@ -1,0 +1,1 @@
+ALTER TABLE movie ADD image VARCHAR(255);

@@ -13,6 +13,7 @@ export default {
       clickedSeatsArray: [],
       username: "",
       seatsLoaded: false,
+      movieImageUrl: "",
     };
   },
   methods: {
@@ -149,11 +150,27 @@ export default {
       }
       console.log("aktuelle geklickte", this.clickedSeatsNum);
     },
+    async getMovieImage() {
+      try {
+        const response = await fetch(
+          "https://image.tmdb.org/t/p/w500/1E5baAaEse26fej7uHcjOgEE2t2.jpg",
+          {
+            method: "GET",
+          }
+        );
+        const data = response;
+        console.log("data ", data.url);
+        this.movieImageUrl = data.url;
+      } catch (err) {
+        console.log(err);
+      }
+    },
   },
   async mounted() {
     this.username = localStorage.getItem("username");
     await this.getMovieById();
     await this.getAllSeatsFromMovie();
+    await this.getMovieImage();
   },
 };
 </script>
@@ -202,5 +219,6 @@ export default {
     >
       reservate
     </button>
+    <Img :src="this.movieImageUrl"></Img>
   </div>
 </template>
