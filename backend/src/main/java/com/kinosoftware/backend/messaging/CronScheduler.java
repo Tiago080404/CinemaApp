@@ -18,7 +18,7 @@ public class CronScheduler {
         this.reservationService = reservationService;
     }
 
-    @Scheduled(cron = "0 * * * * *")
+    @Scheduled(cron = "0 0 */6 * * *")
     public void scheduleEmailSend() {
         System.out.println("cron triggered!!!");
         int everyReservation = reservationService.thisDayReservations();
