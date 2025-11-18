@@ -1,0 +1,1 @@
+ALTER table movie drop column movie_date;
