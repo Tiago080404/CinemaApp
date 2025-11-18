@@ -1,7 +1,9 @@
 package com.kinosoftware.backend.DTO.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class ResultMovie {
@@ -9,7 +11,9 @@ public class ResultMovie {
     private String original_title;
     private String overview;
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDateTime release_date;
+    private LocalDate release_date;
+    @JsonProperty("poster_path")
+    private String image;
 
     public String getOriginal_language() {
         return original_language;
@@ -35,11 +39,19 @@ public class ResultMovie {
         this.overview = overview;
     }
 
-    public LocalDateTime getRelease_date() {
+    public LocalDate getRelease_date() {
         return release_date;
     }
 
-    public void setRelease_date(LocalDateTime release_date) {
+    public void setRelease_date(LocalDate release_date) {
         this.release_date = release_date;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }

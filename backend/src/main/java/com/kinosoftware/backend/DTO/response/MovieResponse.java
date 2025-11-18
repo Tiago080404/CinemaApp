@@ -14,14 +14,14 @@ public class MovieResponse {
     private Long movieId;
     private String titel;
 
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    private LocalDateTime movieDate;
-    private Hall hall;
+//    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+//    private LocalDateTime movieDate;
+    //private Hall hall;
 
-    public MovieResponse(Long movieId, String titel, LocalDateTime movieDate, Hall hall) {
+    public MovieResponse(Long movieId, String titel) {
         this.movieId = movieId;
         this.titel = titel;
-        this.movieDate = movieDate;
-        this.hall = hall;
+        //this.movieDate = movieDate;
+        //this.hall = hall;
     }
 }

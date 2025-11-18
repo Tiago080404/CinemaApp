@@ -22,12 +22,14 @@ public class Movie {
     @Column(name = "titel")
     private String titel;
 
-    @Column(name = "movie_date")
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    private LocalDateTime movieDate;
+//    @Column(name = "movie_date")
+//    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+//    private LocalDateTime movieDate;
 
-    @ManyToOne
-    @JoinColumn(name = "hall")
-    private Hall hall;
+    private String image;
+
+//    @ManyToOne
+//    @JoinColumn(name = "hall")
+//    private Hall hall;
 
 }
