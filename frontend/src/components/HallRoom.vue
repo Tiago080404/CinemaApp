@@ -116,6 +116,7 @@ export default {
         >
           <h2 class="text-lg font-bold">{{ movie.titel }}</h2>
           <p class="text-gray-700">{{ movie.movieDate }}</p>
+          <img :src="'http://image.tmdb.org/t/p/w500/'+movie.image">
         </div>
       </li>
     </ul>
