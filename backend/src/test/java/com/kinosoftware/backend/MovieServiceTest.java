@@ -106,4 +106,18 @@ public class MovieServiceTest {
         log.info("time of first{}",movieShowTimes.getFirst().getShow_time());
         assertEquals(1,movieShowTimes.size());
     }
+
+    @Test
+    @Sql(scripts = "/movieInsert.sql",executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    void insertWhenMovieShowTimeHasDifferentDayInDB(){
+        NewMovieApiDTO newMovieApiDTO = new NewMovieApiDTO();
+        newMovieApiDTO.setImage("/22dj38IckjzEEUZwN1tPU5VJ1qq.jpg");
+        newMovieApiDTO.setMovieDate(LocalDate.parse("2025-12-02"));
+        newMovieApiDTO.setTitel("othermovie");
+        movieService.insertMoviesFromApi(newMovieApiDTO);
+
+        List<MovieShowTime> movieShowTimes = movieShowTimeRepository.findAll();
+
+        assertEquals( 1L,movieShowTimes.getLast().getHall().getHallId());
+    }
 }
