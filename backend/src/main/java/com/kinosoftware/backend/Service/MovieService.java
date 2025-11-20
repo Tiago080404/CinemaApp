@@ -17,8 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.sql.Time;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class MovieService {
@@ -88,27 +87,74 @@ public class MovieService {
     }
 
     public void insertMoviesFromApi(NewMovieApiDTO newMovieApiDTO) {
-        System.out.println(newMovieApiDTO.getMovieDate());
-        List<Movie> newMovie = movieRepository.findByTitel(newMovieApiDTO.getTitel());
-        //movie mit hall und welche zeit und tag
+        List<MovieShowTime> movieShowTimes = movieShowTimeRepository.findByShowDate(newMovieApiDTO.getMovieDate());
 
-        if (newMovie.size() == 0) {
+
+        List<String> times = new ArrayList<>();
+        times.add("20:00:00");
+        times.add("14:00:00");
+        times.add("16:30:00");
+
+        Map<Long, List<String>> halls = new HashMap<>();
+        halls.put(1L, new ArrayList<>());
+        halls.put(2L, new ArrayList<>());
+        halls.put(3L, new ArrayList<>());
+
+        if(movieShowTimes.size()==0){
+            System.out.println("is empty");
+            int randNum = (int) ((Math.random() * (3 - 0)) + 0);
+            String randTime = times.get(randNum);
             Movie movie = new Movie();
             movie.setTitel(newMovieApiDTO.getTitel());
             movie.setImage(newMovieApiDTO.getImage());
-            Movie insertedMovie = movieRepository.save(movie);
-
-            Hall hall = hallRepository.getById(1L); //flo opder juergen fragen ob random?
-
-
+            Movie insertedMovie = movieRepository.save(movie);//vllt noch check ob der movie schon existeier
             MovieShowTime movieShowTime = new MovieShowTime();
             movieShowTime.setMovie_id(insertedMovie);
             movieShowTime.setShow_date(newMovieApiDTO.getMovieDate());
-            movieShowTime.setShow_time(Time.valueOf("18:30:00"));//hier auch nochaml fragen
-            //vllt entscheinde welcher film um welche zeit nach feld popularity in der api response
-            //todo: schauen ob um diese zeit an diesen tag schon ein film in der hall laefuft
+            movieShowTime.setShow_time(Time.valueOf(randTime));
+            Hall hall = hallRepository.getById(1L);
             movieShowTime.setHall(hall);
             movieShowTimeRepository.save(movieShowTime);
+            return;
+        }
+
+        for (MovieShowTime movieShowTime : movieShowTimes) {
+            List<String> hallTimes = halls.get(movieShowTime.getHall().getHallId());
+            hallTimes.add(String.valueOf(movieShowTime.getShow_time()));
+        }
+
+
+        for (Long i = 1L; i <= halls.size(); i++) {
+
+            List<String> specificHall = halls.get(i);
+
+            for (int timeindex = 0; timeindex < 3; timeindex++) {
+                int randNum = (int) ((Math.random() * (3 - 0)) + 0);
+                String randTime = times.get(randNum);
+                if (specificHall.contains(randTime)) {
+                    System.out.println("exists already");
+
+                } else {
+                    specificHall.add(randTime);
+
+                    Hall hall = hallRepository.getById(i);
+
+
+                    Movie movie = new Movie();
+                    movie.setTitel(newMovieApiDTO.getTitel());
+                    movie.setImage(newMovieApiDTO.getImage());
+                    Movie safedMovie = movieRepository.save(movie);
+                    MovieShowTime movieShowTime = new MovieShowTime();
+                    movieShowTime.setShow_date(newMovieApiDTO.getMovieDate());
+                    movieShowTime.setMovie_id(safedMovie);
+                    movieShowTime.setShow_time(Time.valueOf(randTime));
+                    movieShowTime.setHall(hall);
+                    movieShowTimeRepository.save(movieShowTime);
+                    return;
+                }
+
+            }
+
         }
     }
 }

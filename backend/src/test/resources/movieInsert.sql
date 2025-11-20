@@ -1,0 +1,2 @@
+insert into movie (movie_id,titel,image) values (20,'Demon Slayer','/22dj38IckjzEEUZwN1tPU5VJ1qq.jpg');
+insert into movie_showtime (movie_id,hall,show_date,show_time) values (20,1,'2025-12-01','16:30:00');

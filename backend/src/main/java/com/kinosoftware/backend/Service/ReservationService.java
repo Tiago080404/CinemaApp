@@ -51,24 +51,24 @@ public class ReservationService {
         hall.put(3, 150);
 
         Movie movie = movieRepository.findById(reservationDTO.getMovieId()).orElseThrow(() -> new RuntimeException("Movie not found"));
-        System.out.println("Halllll" + movie.getHall().getHallId());
-        Long hallId = movie.getHall().getHallId();
-        Integer changedHallIdType = Math.toIntExact(hallId);
+      //  System.out.println("Halllll" + movie.getHall().getHallId());
+       // Long hallId = movie.getHall().getHallId();
+        //Integer changedHallIdType = Math.toIntExact(hallId);
 
 
         //vorsttelung min. 1 Stunde in der zukunft
-        System.out.println(movie.getMovieDate());
+        //System.out.println(movie.getMovieDate());
         System.out.println(reservationDTO.getReservationTime());
 
-        if (!oneHourInFuture(reservationDTO, movie)) {
-            throw new SeatsNotAvailableException("Movie is in one hour cant book anymore!");
+//        if (!oneHourInFuture(reservationDTO, movie)) {
+//            throw new SeatsNotAvailableException("Movie is in one hour cant book anymore!");
+//
+//        }
 
-        }
 
-
-        if (!sevenDaysInFuture(reservationDTO, movie)) {
-            throw new SeatsNotAvailableException("Movie is in more than 7 days cant book!");
-        }
+//        if (!sevenDaysInFuture(reservationDTO, movie)) {
+//            throw new SeatsNotAvailableException("Movie is in more than 7 days cant book!");
+//        }
 
 
         //max10 sizte reservieren
@@ -81,13 +81,11 @@ public class ReservationService {
         reservation.setCustomerName(reservationDTO.getCustomerName());
         reservation.setReservationTime(reservationDTO.getReservationTime());
 
-        //Movie movie = movieRepository.findById(reservationDTO.getMovieId()).orElseThrow(() -> new RuntimeException("Movie not found"));
         reservation.setMovieId(movie);
 
         reservationRepository.save(reservation);
 
 
-        System.out.println(movie.getHall());
 
 
         for (SeatsDTO i : reservationDTO.getSeats()) {
@@ -110,8 +108,7 @@ public class ReservationService {
             reservationSeatsRepository.save(reservationSeats);
             movieSeatsStatusRepository.save(movieSeatStatus);
         }
-        //ReservationResponse reservationResponse;
-        //reservationDTO.map()
+
         return new ReservationResponse(
                 reservationDTO.getCustomerName(),
                 reservationDTO.getReservationTime(),
@@ -145,39 +142,39 @@ public class ReservationService {
         return bookedSeats;
     }
 
-    public boolean oneHourInFuture(ReservationDTO reservationDTO, Movie movie) {
-        int reservationHour = reservationDTO.getReservationTime().getHour();
-        int movieHour = movie.getMovieDate().getHour();
+//    public boolean oneHourInFuture(ReservationDTO reservationDTO, Movie movie) {
+//        int reservationHour = reservationDTO.getReservationTime().getHour();
+//        int movieHour = movie.getMovieDate().getHour();
+//
+//        int reservationDate = reservationDTO.getReservationTime().getDayOfMonth();
+//        int movieDate = movie.getMovieDate().getDayOfMonth();
+//
+//        int movieMonth = movie.getMovieDate().getMonthValue();
+//        int reservationMonth = reservationDTO.getReservationTime().getMonthValue();
+//
+//        if (movieHour - reservationHour <= 1 && movieDate == reservationDate && movieMonth == reservationMonth) {
+//            return false;
+//        }
+//        return true;
+//    }
 
-        int reservationDate = reservationDTO.getReservationTime().getDayOfMonth();
-        int movieDate = movie.getMovieDate().getDayOfMonth();
-
-        int movieMonth = movie.getMovieDate().getMonthValue();
-        int reservationMonth = reservationDTO.getReservationTime().getMonthValue();
-
-        if (movieHour - reservationHour <= 1 && movieDate == reservationDate && movieMonth == reservationMonth) {
-            return false;
-        }
-        return true;
-    }
-
-    public boolean sevenDaysInFuture(ReservationDTO reservationDTO, Movie movie) {
-        int reservationDate = reservationDTO.getReservationTime().getDayOfMonth();
-        int movieDate = movie.getMovieDate().getDayOfMonth();
-
-        int movieMonth = movie.getMovieDate().getMonthValue();
-        int reservationMonth = reservationDTO.getReservationTime().getMonthValue();
-        System.out.println("minus");
-        System.out.println(movieDate - reservationDate);
-        if (movieDate - reservationDate > 7) {
-            return false;
-        }
-        if (movieMonth != reservationMonth) {//hier vllt noch für ungleiches jahr
-            return false;
-        }
-
-        return true;
-    }
+//    public boolean sevenDaysInFuture(ReservationDTO reservationDTO, Movie movie) {
+//        int reservationDate = reservationDTO.getReservationTime().getDayOfMonth();
+//        int movieDate = movie.getMovieDate().getDayOfMonth();
+//
+//        int movieMonth = movie.getMovieDate().getMonthValue();
+//        int reservationMonth = reservationDTO.getReservationTime().getMonthValue();
+//        System.out.println("minus");
+//        System.out.println(movieDate - reservationDate);
+//        if (movieDate - reservationDate > 7) {
+//            return false;
+//        }
+//        if (movieMonth != reservationMonth) {//hier vllt noch für ungleiches jahr
+//            return false;
+//        }
+//
+//        return true;
+//    }
 
     public int getAllReservations() {
         List<Reservation> reservations = reservationRepository.findAll();

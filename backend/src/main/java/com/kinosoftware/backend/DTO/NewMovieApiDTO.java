@@ -13,6 +13,6 @@ public class NewMovieApiDTO {
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate movieDate;
-    private Long hall;
+    private Long hall;//das vielleicht raus!!!!!
     private String image;
 }

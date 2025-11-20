@@ -107,8 +107,8 @@ public class ReservationServiceTest2 {
     void moreThanSevenDaysInFuture(){
         Movie movie = movieRepository.findById(1L)
                 .orElseThrow(()->new RuntimeException("Movie not found"));
-        movie.setMovieDate(LocalDateTime.now().plusDays(8));
-        System.out.println(movie.getMovieDate());
+       // movie.setMovieDate(LocalDateTime.now().plusDays(8));
+        //System.out.println(movie.getMovieDate());
         movieRepository.save(movie);
         ReservationDTO dto = new ReservationDTO();
         dto.setMovieId(1L);
