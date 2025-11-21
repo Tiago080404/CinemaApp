@@ -1,5 +1,6 @@
 package com.kinosoftware.backend.Entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -23,6 +24,7 @@ public class MovieShowTime {
     private Hall hall;
 
     @Column
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate show_date;
     @Column
     private Time show_time;
