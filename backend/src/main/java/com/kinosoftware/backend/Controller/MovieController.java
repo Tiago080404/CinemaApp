@@ -37,9 +37,9 @@ public class MovieController {
         System.out.println(movieId);
         return movieService.getMovieById(movieId);
     }
-    @GetMapping("/seats/{movieId}/{movieDate}/{movieTime}")
-    public List<AllSeatsForMovieDTO> getAllSeatsByMovie(@PathVariable Long movieId, @PathVariable LocalDate movieDate, @PathVariable Time movieTime){
-        return movieService.getAllSeatsForMovie(movieId,movieDate,movieTime);
+    @GetMapping("/seats/{showTimeId}")
+    public List<AllSeatsForMovieDTO> getAllSeatsByMovie(@PathVariable Long showTimeId){
+        return movieService.getAllSeatsForMovie(showTimeId);
     }
 
     @PostMapping("/insert")

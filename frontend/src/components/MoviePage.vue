@@ -24,12 +24,12 @@ export default {
     };
   },
   methods: {
-    async getAllSeatsFromMovie(dateTimeObject) {
+    async getAllSeatsFromMovie(movieShowTimeId) {
       this.selected = true;
-      console.log(dateTimeObject);
-      this.movieHall = dateTimeObject.movieHall;
+      /* console.log(dateTimeObject);
+      this.movieHall = dateTimeObject.movieHall; */
       const response = await fetch(
-        `http://localhost:8080/movie/seats/${this.id}/${dateTimeObject.date}/${dateTimeObject.time}`,
+        `http://localhost:8080/movie/seats/${movieShowTimeId}`,
         {
           method: "GET",
           headers: { "Content-Type": "application/json" },
@@ -72,7 +72,7 @@ export default {
             movieId: this.id,
             seats: this.clickedSeatsArray,
             //date
-            //time
+            //time  brauche ich beides glaube ich nicht weil ich die movieshowtime id habe
             //hall
           }),
         });

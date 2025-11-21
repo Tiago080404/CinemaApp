@@ -45,8 +45,8 @@ public class MovieService {
         ));
     }
 
-    public List<AllSeatsForMovieDTO> getAllSeatsForMovie(Long id, LocalDate movieDate,Time movieTime) {
-        return movieRepository.getAllSeatsFromMovie(id,movieDate,movieTime);
+    public List<AllSeatsForMovieDTO> getAllSeatsForMovie(Long showTimeId) {
+        return movieRepository.getAllSeatsFromMovie(showTimeId);
     }
 
     public Movie insertNewMovie(NewMovieDTO newMovieDTO) {

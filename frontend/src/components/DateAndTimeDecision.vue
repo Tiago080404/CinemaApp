@@ -10,6 +10,7 @@ export default {
   data() {
     return {
       movieShowDateAndTime: {},
+      allShowsData: null,
       movieHall: 0,
     };
   },
@@ -24,26 +25,36 @@ export default {
           }
         );
         const data = await response.json();
-
+        this.allShowsData = data.showTimes;
         console.log(data);
         this.movieHall = data.showTimes[0].hall.hallId;
         for (const showTime of data.showTimes) {
-            console.log("dasdafsd",showTime.show_date)
-          this.movieShowDateAndTime[showTime.show_date] = [];
-          this.movieShowDateAndTime[showTime.show_date].push(
-            showTime.show_time
-          );
-          this.movieShowDateAndTime[showTime.show_date].push("12:00:00");
+          console.log("dasdafsd", showTime.show_date);
+          if (this.movieShowDateAndTime[showTime.show_date]) {
+            this.movieShowDateAndTime[showTime.show_date].push(
+              showTime.show_time
+            );
+          } else {
+            this.movieShowDateAndTime[showTime.show_date] = [];
+            this.movieShowDateAndTime[showTime.show_date].push(
+              showTime.show_time
+            );
+          }
         }
       } catch (err) {
         console.log("error:", err);
       }
     },
     dateAndTimeClicked(date, time) {
-      console.log(date, time);
-      const dateTimeHallObject = { date, time,movieHall:this.movieHall };
-      console.log(dateTimeHallObject);
-      this.$emit("selectedDateTime", dateTimeHallObject);
+      console.log(this.allShowsData);
+      let movieShowTimeId = null;
+      for (const ele of this.allShowsData) {
+        if (ele.show_date === date && ele.show_time === time) {
+          movieShowTimeId = ele.id;
+        }
+      }
+
+      this.$emit("selectedDateTime", movieShowTimeId);
     },
   },
   async mounted() {
