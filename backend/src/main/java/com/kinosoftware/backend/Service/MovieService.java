@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.sql.Time;
+import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -44,8 +45,8 @@ public class MovieService {
         ));
     }
 
-    public List<AllSeatsForMovieDTO> getAllSeatsForMovie(Long id) {
-        return movieRepository.getAllSeatsFromMovie(id);
+    public List<AllSeatsForMovieDTO> getAllSeatsForMovie(Long id, LocalDate movieDate,Time movieTime) {
+        return movieRepository.getAllSeatsFromMovie(id,movieDate,movieTime);
     }
 
     public Movie insertNewMovie(NewMovieDTO newMovieDTO) {
@@ -155,6 +156,15 @@ public class MovieService {
 
             }
 
+        }
+    }
+
+    public List<MovieShowTime> getAllShowsForMovie(Long movieId){
+        List<MovieShowTime> movieShowTimes = movieShowTimeRepository.getAllShowsForMovie(movieId);
+        if(movieShowTimes.isEmpty()){
+            return null;
+        }else{
+            return movieShowTimes;
         }
     }
 }

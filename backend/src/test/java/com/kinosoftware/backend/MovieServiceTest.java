@@ -67,8 +67,8 @@ public class MovieServiceTest {
 
     @Test
     @Sql(scripts = "/clean.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-    @Sql(scripts = "/movieInsert.sql",executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    void insertNewMovieApi(){
+    @Sql(scripts = "/movieInsert.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    void insertNewMovieApi() {
         NewMovieApiDTO newMovieApiDTO = new NewMovieApiDTO();
         newMovieApiDTO.setImage("/22dj38IckjzEEUZwN1tPU5VJ1qq.jpg");
         newMovieApiDTO.setMovieDate(LocalDate.parse("2025-12-01"));
@@ -76,18 +76,18 @@ public class MovieServiceTest {
         movieService.insertMoviesFromApi(newMovieApiDTO);
 
 
-         List<MovieShowTime> movieShowTimes = movieShowTimeRepository.findAll();
+        List<MovieShowTime> movieShowTimes = movieShowTimeRepository.findAll();
 
 
         log.info("Hall of new inserted showTime{}", movieShowTimes.getLast().getHall().getHallId());
         log.info("Hall of first element{}", movieShowTimes.getFirst().getHall().getHallId());
-        log.info("Time of inserted showTime{}",movieShowTimes.getLast().getShow_time());
-        assertNotSame(movieShowTimes.getFirst(),movieShowTimes.getLast());
+        log.info("Time of inserted showTime{}", movieShowTimes.getLast().getShow_time());
+        assertNotSame(movieShowTimes.getFirst(), movieShowTimes.getLast());
     }
 
     @Test
     @Sql(scripts = "/clean.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    void insertWhenMovieShowTimeEmpty(){
+    void insertWhenMovieShowTimeEmpty() {
 
 
         NewMovieApiDTO newMovieApiDTO = new NewMovieApiDTO();
@@ -97,19 +97,19 @@ public class MovieServiceTest {
         movieService.insertMoviesFromApi(newMovieApiDTO);
 
         List<MovieShowTime> movieShowTimes = movieShowTimeRepository.findAll();
-        log.info("ALL hallls{}",movieShowTimes);
+        log.info("ALL hallls{}", movieShowTimes);
 
         log.info("Hall of new inserted showTime{}", movieShowTimes.getLast().getHall().getHallId());
         log.info("Hall of first element{}", movieShowTimes.getFirst().getHall().getHallId());
 
-        log.info("time of new inserted{}",movieShowTimes.getLast().getShow_time());
-        log.info("time of first{}",movieShowTimes.getFirst().getShow_time());
-        assertEquals(1,movieShowTimes.size());
+        log.info("time of new inserted{}", movieShowTimes.getLast().getShow_time());
+        log.info("time of first{}", movieShowTimes.getFirst().getShow_time());
+        assertEquals(1, movieShowTimes.size());
     }
 
     @Test
-    @Sql(scripts = "/movieInsert.sql",executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    void insertWhenMovieShowTimeHasDifferentDayInDB(){
+    @Sql(scripts = "/movieInsert.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    void insertWhenMovieShowTimeHasDifferentDayInDB() {
         NewMovieApiDTO newMovieApiDTO = new NewMovieApiDTO();
         newMovieApiDTO.setImage("/22dj38IckjzEEUZwN1tPU5VJ1qq.jpg");
         newMovieApiDTO.setMovieDate(LocalDate.parse("2025-12-02"));
@@ -118,6 +118,6 @@ public class MovieServiceTest {
 
         List<MovieShowTime> movieShowTimes = movieShowTimeRepository.findAll();
 
-        assertEquals( 1L,movieShowTimes.getLast().getHall().getHallId());
+        assertEquals(1L, movieShowTimes.getLast().getHall().getHallId());
     }
 }
