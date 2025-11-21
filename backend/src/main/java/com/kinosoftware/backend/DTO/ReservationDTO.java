@@ -14,5 +14,5 @@ public class ReservationDTO {
     private String customerName;
     private LocalDateTime reservationTime;
     private Long movieId;
-    private List<SeatsDTO> seats;//das muss ne liste seinJackson versucht trotzdem, JSON zu deserialisieren → Feldnamen stimmen oft nicht überein (row_num ≠ rowNum).
+    private List<SeatsDTO> seats;
 }
