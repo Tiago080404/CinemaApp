@@ -111,12 +111,12 @@ export default {
     <ul class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
       <li v-for="(movie, index) in movies" :key="index">
         <div
-          class="flex justify-center items-center flex-col p-4 shadow-lg rounded-xl gap-2 text-black hover:cursor-pointer duration-300 hover:scale-105 hover:shadow-2xl transform transition bg-white"
+          class="flex justify-center items-center flex-col p-3 w-150 shadow-lg rounded-xl gap-2 text-black hover:cursor-pointer duration-300 hover:scale-105 hover:shadow-2xl transform transition bg-white"
           @click="showMovie(movie)"
         >
           <h2 class="text-lg font-bold">{{ movie.titel }}</h2>
           <p class="text-gray-700">{{ movie.movieDate }}</p>
-          <img :src="'http://image.tmdb.org/t/p/w500/'+movie.image">
+          <img :src="'http://image.tmdb.org/t/p/w500/'+movie.image" class="rounded-xl h-200">
         </div>
       </li>
     </ul>

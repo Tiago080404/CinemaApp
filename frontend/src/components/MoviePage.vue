@@ -1,5 +1,8 @@
 <script>
+import DateAndTimeDecision from "./DateAndTimeDecision.vue";
+
 export default {
+  components: { DateAndTimeDecision },
   props: {
     id: {
       type: String,
@@ -13,25 +16,20 @@ export default {
       clickedSeatsArray: [],
       username: "",
       seatsLoaded: false,
-      movieImageUrl: "",
+      movieShowDateAndTime: {},
+      movieHall: 0,
+      clickedDateAndTime: {},
+      dateClicked: false,
+      selected: false,
     };
   },
   methods: {
-    async getMovieById() {
-      try {
-        const response = await fetch(`http://localhost:8080/movie/${this.id}`, {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        });
-        const data = await response.json();
-        console.log(data);
-      } catch (err) {
-        console.log(err);
-      }
-    },
-    async getAllSeatsFromMovie() {
+    async getAllSeatsFromMovie(dateTimeObject) {
+      this.selected = true;
+      console.log(dateTimeObject);
+      this.movieHall = dateTimeObject.movieHall;
       const response = await fetch(
-        `http://localhost:8080/movie/seats/${this.id}`,
+        `http://localhost:8080/movie/seats/${this.id}/${dateTimeObject.date}/${dateTimeObject.time}`,
         {
           method: "GET",
           headers: { "Content-Type": "application/json" },
@@ -73,6 +71,9 @@ export default {
             reservationTime: new Date(),
             movieId: this.id,
             seats: this.clickedSeatsArray,
+            //date
+            //time
+            //hall
           }),
         });
         const data = await response.json();
@@ -150,27 +151,12 @@ export default {
       }
       console.log("aktuelle geklickte", this.clickedSeatsNum);
     },
-    async getMovieImage() {
-      try {
-        const response = await fetch(
-          "https://image.tmdb.org/t/p/w500/1E5baAaEse26fej7uHcjOgEE2t2.jpg",
-          {
-            method: "GET",
-          }
-        );
-        const data = response;
-        console.log("data ", data.url);
-        this.movieImageUrl = data.url;
-      } catch (err) {
-        console.log(err);
-      }
-    },
   },
   async mounted() {
     this.username = localStorage.getItem("username");
-    await this.getMovieById();
-    await this.getAllSeatsFromMovie();
-    await this.getMovieImage();
+    // await this.getMovieById();
+    //await this.getAllSeatsFromMovie();
+    // await this.getAllShowsForMovie();
   },
 };
 </script>
@@ -178,8 +164,15 @@ export default {
   <!-- leinwand -->
   <!-- seats -->
   <!-- reihe -->
-  <div class="flex flex-col items-center p-8 min-h-screen">
+  <div v-if="!this.selected">
+    <DateAndTimeDecision
+      :id="this.id"
+      @selected-date-time="getAllSeatsFromMovie"
+    ></DateAndTimeDecision>
+  </div>
+  <div v-else class="flex flex-col items-center p-8 min-h-screen">
     <div class="absolute right-5">
+      <p>Du bist in Halle {{ this.movieHall }}</p>
       <p>Seats you have clicked: {{ this.clickedSeatsNum }}</p>
       <p>{{ this.username }}</p>
     </div>
@@ -219,6 +212,5 @@ export default {
     >
       reservate
     </button>
-    <Img :src="this.movieImageUrl"></Img>
   </div>
 </template>
