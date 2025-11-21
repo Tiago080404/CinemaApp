@@ -13,6 +13,6 @@ public class ReservationDTO {
 
     private String customerName;
     private LocalDateTime reservationTime;
-    private Long movieId;
+    private Long showTimeId;
     private List<SeatsDTO> seats;
 }

@@ -24,6 +24,6 @@ public class Reservation {
     private LocalDateTime reservationTime;
 
     @ManyToOne
-    @JoinColumn(name = "movie")
-    private Movie movieId;
+    @JoinColumn(name = "showtime_id")
+    private MovieShowTime MovieShowTime;
 }

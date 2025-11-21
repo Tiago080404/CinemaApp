@@ -22,7 +22,7 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<?> buyMovieTickets(@RequestBody ReservationDTO reservationDTO) {
-        ReservationResponse reservation = reservationService.buyMovieTicekts(reservationDTO);
+        ReservationResponse reservation = reservationService.buyMovieTickets(reservationDTO);
         Map<String, Object> response = new HashMap<>();
         if (reservation == null) {
 
