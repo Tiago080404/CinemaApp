@@ -79,13 +79,13 @@ export default {
         console.log("res", data);
         this.clickedSeatsNum = 0;
         if (response.ok) {
-          await this.getAllSeatsFromMovie();
+          await this.getAllSeatsFromMovie(this.showTimeId);
           this.showSuccessMessage(data.message);
           this.clickedSeatsArray = [];
         } else {
           console.log(data.message);
           this.showFailMessage(data.message);
-          await this.getAllSeatsFromMovie();
+          await this.getAllSeatsFromMovie(this.showTimeId);
         }
       } catch (err) {
         console.log(err);
