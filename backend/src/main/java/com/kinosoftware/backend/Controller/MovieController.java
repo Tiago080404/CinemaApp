@@ -1,7 +1,9 @@
 package com.kinosoftware.backend.Controller;
 
+import com.kinosoftware.backend.DTO.AllMoviesWithDateDTO;
 import com.kinosoftware.backend.DTO.AllSeatsForMovieDTO;
 import com.kinosoftware.backend.DTO.NewMovieDTO;
+import com.kinosoftware.backend.DTO.response.AllMoviesWithDateResponse;
 import com.kinosoftware.backend.DTO.response.MovieResponse;
 import com.kinosoftware.backend.Entity.Movie;
 import com.kinosoftware.backend.Entity.MovieShowTime;
@@ -28,7 +30,7 @@ public class MovieController {
     }
 
     @GetMapping
-    public List<Movie> getAllMovies(){
+    public List<AllMoviesWithDateResponse> getAllMovies(){
         return movieService.getAllMovies();
     }
 

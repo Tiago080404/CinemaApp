@@ -3,11 +3,14 @@ export default {
   data() {
     return {
       movies: [],
+      filteredMovies: [],
       newMovieInsert: false,
       movieTitel: "",
       movieDate: "",
       movieHall: 0,
       movieTime: "",
+      titelFilter: "",
+      dateFilter: "",
     };
   },
   methods: {
@@ -19,6 +22,7 @@ export default {
       const data = await response.json();
       console.log(data);
       this.movies = data;
+      this.filteredMovies = data;
     },
     showMovie(movie) {
       this.$emit("movie", movie);
@@ -48,6 +52,32 @@ export default {
       } catch (err) {
         console.log(err);
       }
+    },
+    filterByTitel() {
+      console.log(this.titelFilter);
+      this.filteredMovies = this.movies.filter((movie) =>
+        movie.titel.toLowerCase().includes(this.titelFilter.toLowerCase())
+      );
+    },
+    filterByDate() {
+      console.log("date", this.dateFilter, this.movies[1].showDate);
+      if (this.dateFilter === "") {
+        this.filteredMovies = this.movies;
+        console.log(this.filteredMovies);
+        return;
+      }
+      this.filteredMovies = [];
+      for (let i = 0; i < this.movies.length; i++) {
+        //if(this.movies[i].showDate)
+        for (const date of this.movies[i].showDate) {
+          if (date === this.dateFilter) {
+            this.filteredMovies.push(this.movies[i]);
+          }
+        }
+      }
+      /* this.filteredMovies = this.movies.filter(
+        (movie) => movie.showDate === this.dateFilter
+      ); */
     },
   },
   async mounted() {
@@ -107,16 +137,32 @@ export default {
       >
         +
       </button>
+      <input
+        v-model="this.titelFilter"
+        type="text"
+        class="absolute top-0 right-20 bg-white text-black rounded-lg"
+        @change="filterByTitel"
+      />
+      <input
+        v-model="this.dateFilter"
+        type="date"
+        class="absolute top-0 right-80"
+        @change="filterByDate"
+      />
     </div>
     <ul class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      <li v-for="(movie, index) in movies" :key="index">
+      <li v-for="(movie, index) in filteredMovies" :key="index">
         <div
           class="flex justify-center items-center flex-col p-3 w-150 shadow-lg rounded-xl gap-2 text-black hover:cursor-pointer duration-300 hover:scale-105 hover:shadow-2xl transform transition bg-white"
           @click="showMovie(movie)"
         >
           <h2 class="text-lg font-bold">{{ movie.titel }}</h2>
+          <!--  -->
+          <img
+            :src="'http://image.tmdb.org/t/p/w500/' + movie.image"
+            class="rounded-xl h-200"
+          />
           <p class="text-gray-700">{{ movie.movieDate }}</p>
-          <img :src="'http://image.tmdb.org/t/p/w500/'+movie.image" class="rounded-xl h-200">
         </div>
       </li>
     </ul>

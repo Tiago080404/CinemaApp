@@ -1,8 +1,10 @@
 package com.kinosoftware.backend.Service;
 
+import com.kinosoftware.backend.DTO.AllMoviesWithDateDTO;
 import com.kinosoftware.backend.DTO.AllSeatsForMovieDTO;
 import com.kinosoftware.backend.DTO.NewMovieApiDTO;
 import com.kinosoftware.backend.DTO.NewMovieDTO;
+import com.kinosoftware.backend.DTO.response.AllMoviesWithDateResponse;
 import com.kinosoftware.backend.DTO.response.MovieApiResponse;
 import com.kinosoftware.backend.DTO.response.MovieResponse;
 import com.kinosoftware.backend.DTO.response.ResultMovie;
@@ -32,8 +34,35 @@ public class MovieService {
         this.movieShowTimeRepository = movieShowTimeRepository;
     }
 
-    public List<Movie> getAllMovies() {
-        return movieRepository.findAll();
+    public List<AllMoviesWithDateResponse> getAllMovies() {
+
+        List<AllMoviesWithDateDTO> movies = movieRepository.getAllMoviesWithDate();
+        List<AllMoviesWithDateResponse> newCheck = new ArrayList<>();
+
+        for (int i = 0; i < movies.size(); i++) {
+            System.out.println("dafs" + movies.get(i));
+            AllMoviesWithDateResponse existing = null;
+            for (AllMoviesWithDateResponse response : newCheck ){
+                if(response.getMovieId()==movies.get(i).getMovieId()){
+                    existing = response;
+                    break;
+                }
+            }
+            if(existing!=null){
+                existing.getShowDate().add(movies.get(i).getShowDate());
+            }else {
+                AllMoviesWithDateResponse newMovie = new AllMoviesWithDateResponse(
+                        movies.get(i).getMovieId(),
+                        movies.get(i).getTitel(),
+                        movies.get(i).getImage(),
+                        new ArrayList<Date>()
+                );
+                newMovie.getShowDate().add(movies.get(i).getShowDate());
+                newCheck.add(newMovie);
+            }
+        }
+
+        return newCheck;
     }
 
     public Optional<MovieResponse> getMovieById(Long id) {
@@ -101,7 +130,7 @@ public class MovieService {
         halls.put(2L, new ArrayList<>());
         halls.put(3L, new ArrayList<>());
 
-        if(movieShowTimes.size()==0){
+        if (movieShowTimes.size() == 0) {
             System.out.println("is empty");
             int randNum = (int) ((Math.random() * (3 - 0)) + 0);
             String randTime = times.get(randNum);
@@ -159,11 +188,11 @@ public class MovieService {
         }
     }
 
-    public List<MovieShowTime> getAllShowsForMovie(Long movieId){
+    public List<MovieShowTime> getAllShowsForMovie(Long movieId) {
         List<MovieShowTime> movieShowTimes = movieShowTimeRepository.getAllShowsForMovie(movieId);
-        if(movieShowTimes.isEmpty()){
+        if (movieShowTimes.isEmpty()) {
             return null;
-        }else{
+        } else {
             return movieShowTimes;
         }
     }
