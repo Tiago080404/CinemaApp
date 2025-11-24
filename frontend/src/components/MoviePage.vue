@@ -21,6 +21,7 @@ export default {
       clickedDateAndTime: {},
       dateClicked: false,
       selected: false,
+      showTimeId: null,
     };
   },
   methods: {
@@ -28,6 +29,7 @@ export default {
       this.selected = true;
       /* console.log(dateTimeObject);
       this.movieHall = dateTimeObject.movieHall; */
+      this.showTimeId = movieShowTimeId;
       const response = await fetch(
         `http://localhost:8080/movie/seats/${movieShowTimeId}`,
         {
@@ -69,11 +71,8 @@ export default {
           body: JSON.stringify({
             customerName: this.username,
             reservationTime: new Date(),
-            movieId: this.id,
+            showTimeId: this.showTimeId,
             seats: this.clickedSeatsArray,
-            //date
-            //time  brauche ich beides glaube ich nicht weil ich die movieshowtime id habe
-            //hall
           }),
         });
         const data = await response.json();
