@@ -3,6 +3,8 @@ package com.kinosoftware.backend.Entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.sql.Time;
 import java.time.LocalDate;

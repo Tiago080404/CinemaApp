@@ -6,12 +6,16 @@ import com.kinosoftware.backend.DTO.response.ReservationResponse;
 import com.kinosoftware.backend.DTO.response.SeatsNotAvailableException;
 import com.kinosoftware.backend.Entity.*;
 import com.kinosoftware.backend.Repository.*;
+import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
 import java.sql.Time;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Service
@@ -25,14 +29,14 @@ public class ReservationService {
     private final MovieShowTimeRepository movieShowTimeRepository;
     private final MovieShowTimeSeatStatusRepository movieShowTimeSeatStatusRepository;
 
-    public ReservationService(MovieRepository movieRepository, ReservationRepository reservationRepository, SeatsRepository seatsRepository, ReservationSeatsRepository reservationSeatsRepository, MovieSeatsStatusRepository movieSeatsStatusRepository, MovieShowTimeRepository movieShowTimeRepository,MovieShowTimeSeatStatusRepository movieShowTimeSeatStatusRepository) {
+    public ReservationService(MovieRepository movieRepository, ReservationRepository reservationRepository, SeatsRepository seatsRepository, ReservationSeatsRepository reservationSeatsRepository, MovieSeatsStatusRepository movieSeatsStatusRepository, MovieShowTimeRepository movieShowTimeRepository, MovieShowTimeSeatStatusRepository movieShowTimeSeatStatusRepository) {
         this.movieRepository = movieRepository;
         this.reservationRepository = reservationRepository;
         this.seatsRepository = seatsRepository;
         this.reservationSeatsRepository = reservationSeatsRepository;
         this.movieSeatsStatusRepository = movieSeatsStatusRepository;
         this.movieShowTimeRepository = movieShowTimeRepository;
-        this.movieShowTimeSeatStatusRepository=movieShowTimeSeatStatusRepository;
+        this.movieShowTimeSeatStatusRepository = movieShowTimeSeatStatusRepository;
     }
 
 //    public ReservationResponse buyMovieTicekts(ReservationDTO reservationDTO) {
@@ -180,6 +184,7 @@ public class ReservationService {
 //
 //        return true;
 //    }
+    @Transactional
     public ReservationResponse buyMovieTickets(ReservationDTO reservationDTO) {
         //sitze frei
         ArrayList<Map> statusList = checkSeatStatus(reservationDTO);
@@ -191,9 +196,10 @@ public class ReservationService {
             }
             throw new SeatsNotAvailableException("Seats are not available");
         }
-
+        System.out.println("accessingggg...");
 
         MovieShowTime movieShowTime = movieShowTimeRepository.getById(reservationDTO.getShowTimeId());
+        System.out.println("Moviesdhowtime" + movieShowTime);
         //onehour
         if (!oneHourInFutureCheck(reservationDTO, movieShowTime)) {
             throw new SeatsNotAvailableException("Movie is in one hour cant book anymore!");
@@ -224,7 +230,7 @@ public class ReservationService {
             movieShowTimeSeatStatus.setMovieShowTime(movieShowTime);
             movieShowTimeSeatStatus.setSeats(seats);
             movieShowTimeSeatStatus.setStatus(Status.Booked);
-            System.out.println("movieShowtime"+movieShowTimeSeatStatus);
+            System.out.println("movieShowtime" + movieShowTimeSeatStatus);
             ReservationSeats reservationSeats = new ReservationSeats();
             reservationSeats.setReservationID(reservation);
             reservationSeats.setSeatId(seats);
@@ -276,16 +282,12 @@ public class ReservationService {
     }
 
     public boolean sevenDaysInFutureCheck(ReservationDTO reservationDTO, MovieShowTime movieShowTime) {
-        int reservationDate = reservationDTO.getReservationTime().getDayOfMonth();
-        int movieShowTimeDate = movieShowTime.getShow_date().getDayOfMonth();
+        LocalDate reservationDate = reservationDTO.getReservationTime().toLocalDate();
+        LocalDate movieShowTimeDate = movieShowTime.getShow_date();
 
-        int reservationMonth = reservationDTO.getReservationTime().getMonthValue();
-        int movieShowTimeMonth = movieShowTime.getShow_date().getDayOfMonth();
+        Long diff = ChronoUnit.DAYS.between(reservationDate, movieShowTimeDate);
 
-        if (movieShowTimeDate - reservationDate > 7) {
-            return false;
-        }
-        if (movieShowTimeMonth == reservationMonth) {
+        if (diff > 7) {
             return false;
         }
         return true;

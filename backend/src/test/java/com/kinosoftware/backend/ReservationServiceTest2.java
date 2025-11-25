@@ -4,15 +4,15 @@ import com.kinosoftware.backend.DTO.ReservationDTO;
 import com.kinosoftware.backend.DTO.SeatsDTO;
 import com.kinosoftware.backend.DTO.response.ReservationResponse;
 import com.kinosoftware.backend.DTO.response.SeatsNotAvailableException;
-import com.kinosoftware.backend.Entity.Hall;
-import com.kinosoftware.backend.Entity.Movie;
-import com.kinosoftware.backend.Entity.MovieSeatStatus;
-import com.kinosoftware.backend.Entity.Seats;
+import com.kinosoftware.backend.Entity.*;
 import com.kinosoftware.backend.Repository.MovieRepository;
 import com.kinosoftware.backend.Repository.MovieSeatsStatusRepository;
+import com.kinosoftware.backend.Repository.MovieShowTimeRepository;
 import com.kinosoftware.backend.Repository.ReservationSeatsRepository;
 import com.kinosoftware.backend.Service.ReservationService;
+import org.junit.jupiter.api.function.Executable;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.test.context.jdbc.Sql;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,81 +43,9 @@ public class ReservationServiceTest2 {
 
     @Autowired
     private MovieRepository movieRepository;
+    @Autowired
+    private MovieShowTimeRepository movieShowTimeRepository;
 
-
-//    @Test
-//    void buyTicket(){
-//        ReservationDTO dto = new ReservationDTO();
-//        dto.setMovieId(5L);
-//        dto.setCustomerName("Max Mustermann");
-//        dto.setReservationTime(LocalDateTime.now().minusMinutes(120));
-//        dto.setSeats(Arrays.asList(new SeatsDTO(1, 1), new SeatsDTO(1, 2)));
-//        System.out.println("dtooo"+dto);
-//        ReservationResponse response = reservationService.buyMovieTicekts(dto);
-//
-
-    /// /        assertEquals(dto.getCustomerName(), response.getCustomerName());
-//        assertEquals(dto.getSeats().size(), response.getSeats().size());
-//
-//        assertEquals(dto.getCustomerName(),response.getCustomerName());
-//    }
-//
-//    @Test
-//    void reservateSameSeat(){
-//        ReservationDTO dto = new ReservationDTO();
-//        dto.setMovieId(5L);
-//        dto.setCustomerName("test22");
-//        dto.setReservationTime(LocalDateTime.now().minusMinutes(120));
-//        dto.setSeats(Arrays.asList(new SeatsDTO(2, 1), new SeatsDTO(2, 2)));
-//        System.out.println("dtooo"+dto);
-//        ReservationResponse response = reservationService.buyMovieTicekts(dto);
-//
-//        ReservationDTO dto2 = new ReservationDTO();
-//        dto2.setMovieId(5L);
-//        dto2.setCustomerName("Tiago");
-//        dto2.setReservationTime(LocalDateTime.now().minusMinutes(120));
-//        dto2.setSeats(Arrays.asList(new SeatsDTO(2, 1), new SeatsDTO(2, 2)));
-//
-//        assertThrows(SeatsNotAvailableException.class,()->reservationService.buyMovieTicekts(dto2));
-//    }
-//
-//    @Test
-//    void moreThanTenTickets(){
-//        ReservationDTO dto = new ReservationDTO();
-//        dto.setMovieId(8L);
-//        dto.setCustomerName("Test User");
-//        dto.setReservationTime(LocalDateTime.now());
-//
-//        ArrayList<SeatsDTO> toManySeats = new ArrayList<>();
-//
-//        for (int i = 0; i < 11; i++) {
-//            toManySeats.add(new SeatsDTO(1, i + 1));
-//        }
-//        dto.setSeats(toManySeats);
-//
-//        assertThrows(SeatsNotAvailableException.class,()->reservationService.buyMovieTicekts(dto));
-//    }
-//
-//    @Test
-//    void toLateForReservate(){}
-//
-//    @Test
-//    //maybe del,ete
-//   // @Sql
-//    void moreThanSevenDaysInFuture(){
-//        Movie movie = movieRepository.findById(1L)
-//                .orElseThrow(()->new RuntimeException("Movie not found"));
-//       // movie.setMovieDate(LocalDateTime.now().plusDays(8));
-//        //System.out.println(movie.getMovieDate());
-//        movieRepository.save(movie);
-//        ReservationDTO dto = new ReservationDTO();
-//        dto.setMovieId(1L);
-//        dto.setCustomerName("Test User");
-//        dto.setReservationTime(LocalDateTime.now());
-//        dto.setSeats(Arrays.asList(new SeatsDTO(2, 1)));
-//
-//        assertThrows(SeatsNotAvailableException.class,()->reservationService.buyMovieTicekts(dto));
-//    }
     @Test
     @Sql(scripts = {"/movieInsert.sql", "/newSeatsReservationsInsert.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(scripts = "/clean.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
@@ -134,7 +62,6 @@ public class ReservationServiceTest2 {
     @Test
     @Sql(scripts = {"/movieInsert.sql", "/newSeatsReservationsInsert.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(scripts = "/clean.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-    @Sql(scripts = "/clean.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void moreThanTenTickets() {
         ReservationDTO reservationDTO = new ReservationDTO();
         reservationDTO.setShowTimeId(1L);
@@ -146,6 +73,22 @@ public class ReservationServiceTest2 {
         }
         reservationDTO.setSeats(toManySeats);
 
-        assertThrows(SeatsNotAvailableException.class, () -> reservationService.buyMovieTickets(reservationDTO));
+        assertThrows(SeatsNotAvailableException.class, (Executable) reservationService.buyMovieTickets(reservationDTO));
+    }
+
+    @Test
+    @Sql(scripts = "/movieInsert.sql",executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/clean.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    void moreThan7Days(){
+        ReservationDTO reservationDTO = new ReservationDTO();
+
+        MovieShowTime movieShowTime = movieShowTimeRepository.findById(1L).get();
+        reservationDTO.setReservationTime(movieShowTime.getShow_date().minusDays(8).atStartOfDay());
+        //reservationDTO.setReservationTime(LocalDateTime.now().minusDays(10L));
+        reservationDTO.setCustomerName("tiago");
+        reservationDTO.setShowTimeId(1L);
+        reservationDTO.setSeats(Arrays.asList(new SeatsDTO(3,1)));
+
+        assertThrows(SeatsNotAvailableException.class,()->reservationService.buyMovieTickets(reservationDTO));
     }
 }
