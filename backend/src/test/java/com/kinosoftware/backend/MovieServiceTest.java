@@ -86,7 +86,7 @@ public class MovieServiceTest {
     }
 
     @Test
-    @Sql(scripts = "/clean.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/clean.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void insertWhenMovieShowTimeEmpty() {
 
 
@@ -109,6 +109,7 @@ public class MovieServiceTest {
 
     @Test
     @Sql(scripts = "/movieInsert.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/clean.sql",executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void insertWhenMovieShowTimeHasDifferentDayInDB() {
         NewMovieApiDTO newMovieApiDTO = new NewMovieApiDTO();
         newMovieApiDTO.setImage("/22dj38IckjzEEUZwN1tPU5VJ1qq.jpg");
@@ -119,5 +120,19 @@ public class MovieServiceTest {
         List<MovieShowTime> movieShowTimes = movieShowTimeRepository.findAll();
 
         assertEquals(1L, movieShowTimes.getLast().getHall().getHallId());
+    }
+
+    @Test
+    @Sql(scripts = "/movieInsert.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/clean.sql",executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    void noInsertWhenMovieExists(){
+        NewMovieApiDTO newMovieApiDTO = new NewMovieApiDTO();
+        newMovieApiDTO.setMovieDate(LocalDate.parse("2025-12-02"));
+        newMovieApiDTO.setTitel("Demon Slayer");
+        newMovieApiDTO.setImage("/22dj38IckjzEEUZwN1tPU5VJ1qq.jpg");
+        movieService.insertMoviesFromApi(newMovieApiDTO);
+
+        List<MovieShowTime> movieShowTimes = movieShowTimeRepository.findAll();
+        assertEquals(1,movieShowTimes.size());
     }
 }

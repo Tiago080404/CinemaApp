@@ -18,4 +18,6 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     List<AllMoviesWithDateDTO> getAllMoviesWithDate();
 
     List<Movie> findByTitel(String titel);
+
+    List<Movie> getByTitel(String titel);
 }

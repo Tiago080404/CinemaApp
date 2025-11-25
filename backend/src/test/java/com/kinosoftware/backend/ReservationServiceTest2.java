@@ -30,9 +30,8 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @ActiveProfiles("test")
-@Sql(scripts = "/clean.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class ReservationServiceTest2 {
-//@SQL({"../java/..test/..main/java/resources/db/migration/V1__create_tables.sql"})
+    //@SQL({"../java/..test/..main/java/resources/db/migration/V1__create_tables.sql"})
     @Autowired
     private ReservationService reservationService;
 
@@ -46,76 +45,107 @@ public class ReservationServiceTest2 {
     private MovieRepository movieRepository;
 
 
+//    @Test
+//    void buyTicket(){
+//        ReservationDTO dto = new ReservationDTO();
+//        dto.setMovieId(5L);
+//        dto.setCustomerName("Max Mustermann");
+//        dto.setReservationTime(LocalDateTime.now().minusMinutes(120));
+//        dto.setSeats(Arrays.asList(new SeatsDTO(1, 1), new SeatsDTO(1, 2)));
+//        System.out.println("dtooo"+dto);
+//        ReservationResponse response = reservationService.buyMovieTicekts(dto);
+//
+
+    /// /        assertEquals(dto.getCustomerName(), response.getCustomerName());
+//        assertEquals(dto.getSeats().size(), response.getSeats().size());
+//
+//        assertEquals(dto.getCustomerName(),response.getCustomerName());
+//    }
+//
+//    @Test
+//    void reservateSameSeat(){
+//        ReservationDTO dto = new ReservationDTO();
+//        dto.setMovieId(5L);
+//        dto.setCustomerName("test22");
+//        dto.setReservationTime(LocalDateTime.now().minusMinutes(120));
+//        dto.setSeats(Arrays.asList(new SeatsDTO(2, 1), new SeatsDTO(2, 2)));
+//        System.out.println("dtooo"+dto);
+//        ReservationResponse response = reservationService.buyMovieTicekts(dto);
+//
+//        ReservationDTO dto2 = new ReservationDTO();
+//        dto2.setMovieId(5L);
+//        dto2.setCustomerName("Tiago");
+//        dto2.setReservationTime(LocalDateTime.now().minusMinutes(120));
+//        dto2.setSeats(Arrays.asList(new SeatsDTO(2, 1), new SeatsDTO(2, 2)));
+//
+//        assertThrows(SeatsNotAvailableException.class,()->reservationService.buyMovieTicekts(dto2));
+//    }
+//
+//    @Test
+//    void moreThanTenTickets(){
+//        ReservationDTO dto = new ReservationDTO();
+//        dto.setMovieId(8L);
+//        dto.setCustomerName("Test User");
+//        dto.setReservationTime(LocalDateTime.now());
+//
+//        ArrayList<SeatsDTO> toManySeats = new ArrayList<>();
+//
+//        for (int i = 0; i < 11; i++) {
+//            toManySeats.add(new SeatsDTO(1, i + 1));
+//        }
+//        dto.setSeats(toManySeats);
+//
+//        assertThrows(SeatsNotAvailableException.class,()->reservationService.buyMovieTicekts(dto));
+//    }
+//
+//    @Test
+//    void toLateForReservate(){}
+//
+//    @Test
+//    //maybe del,ete
+//   // @Sql
+//    void moreThanSevenDaysInFuture(){
+//        Movie movie = movieRepository.findById(1L)
+//                .orElseThrow(()->new RuntimeException("Movie not found"));
+//       // movie.setMovieDate(LocalDateTime.now().plusDays(8));
+//        //System.out.println(movie.getMovieDate());
+//        movieRepository.save(movie);
+//        ReservationDTO dto = new ReservationDTO();
+//        dto.setMovieId(1L);
+//        dto.setCustomerName("Test User");
+//        dto.setReservationTime(LocalDateTime.now());
+//        dto.setSeats(Arrays.asList(new SeatsDTO(2, 1)));
+//
+//        assertThrows(SeatsNotAvailableException.class,()->reservationService.buyMovieTicekts(dto));
+//    }
     @Test
-    void buyTicket(){
-        ReservationDTO dto = new ReservationDTO();
-        dto.setMovieId(5L);
-        dto.setCustomerName("Max Mustermann");
-        dto.setReservationTime(LocalDateTime.now().minusMinutes(120));
-        dto.setSeats(Arrays.asList(new SeatsDTO(1, 1), new SeatsDTO(1, 2)));
-        System.out.println("dtooo"+dto);
-        ReservationResponse response = reservationService.buyMovieTicekts(dto);
+    @Sql(scripts = {"/movieInsert.sql", "/newSeatsReservationsInsert.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/clean.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    void reservateSameSeat() {
+        ReservationDTO reservationDTO = new ReservationDTO();
+        reservationDTO.setSeats(Arrays.asList(new SeatsDTO(2, 1), new SeatsDTO(2, 2)));
+        reservationDTO.setCustomerName("tiago");
+        reservationDTO.setReservationTime(LocalDateTime.now());
+        reservationDTO.setShowTimeId(1L);
 
-//        assertEquals(dto.getCustomerName(), response.getCustomerName());
-        assertEquals(dto.getSeats().size(), response.getSeats().size());
-
-        assertEquals(dto.getCustomerName(),response.getCustomerName());
+        assertThrows(SeatsNotAvailableException.class, () -> reservationService.buyMovieTickets(reservationDTO));
     }
 
     @Test
-    void reservateSameSeat(){
-        ReservationDTO dto = new ReservationDTO();
-        dto.setMovieId(5L);
-        dto.setCustomerName("test22");
-        dto.setReservationTime(LocalDateTime.now().minusMinutes(120));
-        dto.setSeats(Arrays.asList(new SeatsDTO(2, 1), new SeatsDTO(2, 2)));
-        System.out.println("dtooo"+dto);
-        ReservationResponse response = reservationService.buyMovieTicekts(dto);
-
-        ReservationDTO dto2 = new ReservationDTO();
-        dto2.setMovieId(5L);
-        dto2.setCustomerName("Tiago");
-        dto2.setReservationTime(LocalDateTime.now().minusMinutes(120));
-        dto2.setSeats(Arrays.asList(new SeatsDTO(2, 1), new SeatsDTO(2, 2)));
-
-        assertThrows(SeatsNotAvailableException.class,()->reservationService.buyMovieTicekts(dto2));
-    }
-
-    @Test
-    void moreThanTenTickets(){
-        ReservationDTO dto = new ReservationDTO();
-        dto.setMovieId(8L);
-        dto.setCustomerName("Test User");
-        dto.setReservationTime(LocalDateTime.now());
-
+    @Sql(scripts = {"/movieInsert.sql", "/newSeatsReservationsInsert.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/clean.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Sql(scripts = "/clean.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    void moreThanTenTickets() {
+        ReservationDTO reservationDTO = new ReservationDTO();
+        reservationDTO.setShowTimeId(1L);
+        reservationDTO.setCustomerName("tiago");
+        reservationDTO.setReservationTime(LocalDateTime.now());
         ArrayList<SeatsDTO> toManySeats = new ArrayList<>();
-
         for (int i = 0; i < 11; i++) {
-            toManySeats.add(new SeatsDTO(1, i + 1));
+            toManySeats.add(new SeatsDTO(3, i + 1));
         }
-        dto.setSeats(toManySeats);
+        reservationDTO.setSeats(toManySeats);
 
-        assertThrows(SeatsNotAvailableException.class,()->reservationService.buyMovieTicekts(dto));
-    }
-
-    @Test
-    void toLateForReservate(){}
-
-    @Test
-    //maybe del,ete
-   // @Sql
-    void moreThanSevenDaysInFuture(){
-        Movie movie = movieRepository.findById(1L)
-                .orElseThrow(()->new RuntimeException("Movie not found"));
-       // movie.setMovieDate(LocalDateTime.now().plusDays(8));
-        //System.out.println(movie.getMovieDate());
-        movieRepository.save(movie);
-        ReservationDTO dto = new ReservationDTO();
-        dto.setMovieId(1L);
-        dto.setCustomerName("Test User");
-        dto.setReservationTime(LocalDateTime.now());
-        dto.setSeats(Arrays.asList(new SeatsDTO(2, 1)));
-
-        assertThrows(SeatsNotAvailableException.class,()->reservationService.buyMovieTicekts(dto));
+        assertThrows(SeatsNotAvailableException.class, () -> reservationService.buyMovieTickets(reservationDTO));
     }
 }

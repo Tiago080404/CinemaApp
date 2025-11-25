@@ -1,0 +1,1 @@
+insert into movie_showtime_seat_status (showtime_id,seat_id,status) values(1,26,'Booked');

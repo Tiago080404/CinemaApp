@@ -119,7 +119,12 @@ public class MovieService {
     public void insertMoviesFromApi(NewMovieApiDTO newMovieApiDTO) {
         List<MovieShowTime> movieShowTimes = movieShowTimeRepository.findByShowDate(newMovieApiDTO.getMovieDate());
 
-
+        List<Movie> checkMovie = movieRepository.getByTitel(newMovieApiDTO.getTitel());
+        System.out.println(checkMovie);
+        if(checkMovie.size()>0){
+            System.out.println("movie already in db");
+            return;
+        }
         List<String> times = new ArrayList<>();
         times.add("20:00:00");
         times.add("14:00:00");
@@ -137,7 +142,7 @@ public class MovieService {
             Movie movie = new Movie();
             movie.setTitel(newMovieApiDTO.getTitel());
             movie.setImage(newMovieApiDTO.getImage());
-            Movie insertedMovie = movieRepository.save(movie);//vllt noch check ob der movie schon existeier
+            Movie insertedMovie = movieRepository.save(movie);
             MovieShowTime movieShowTime = new MovieShowTime();
             movieShowTime.setMovie_id(insertedMovie);
             movieShowTime.setShow_date(newMovieApiDTO.getMovieDate());
