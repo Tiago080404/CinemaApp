@@ -11,6 +11,7 @@ export default {
       movieTime: "",
       titelFilter: "",
       dateFilter: "",
+      orderUp: false,
     };
   },
   methods: {
@@ -68,16 +69,27 @@ export default {
       }
       this.filteredMovies = [];
       for (let i = 0; i < this.movies.length; i++) {
-        //if(this.movies[i].showDate)
         for (const date of this.movies[i].showDate) {
           if (date === this.dateFilter) {
             this.filteredMovies.push(this.movies[i]);
           }
         }
       }
-      /* this.filteredMovies = this.movies.filter(
-        (movie) => movie.showDate === this.dateFilter
-      ); */
+    },
+    changeOrder(orderOption) {
+      if (orderOption === "up") {
+        console.log(this.movies.sort((a, b) => a.popularity - b.popularity));
+        this.filteredMovies = this.movies.sort(
+          (a, b) => a.popularity - b.popularity
+        );
+        this.orderUp = !this.orderUp;
+      } else {
+        console.log(this.movies.sort((a, b) => b.popularity - a.popularity));
+        this.filteredMovies = this.movies.sort(
+          (a, b) => b.popularity - a.popularity
+        );
+        this.orderUp = !this.orderUp;
+      }
     },
   },
   async mounted() {
@@ -149,6 +161,24 @@ export default {
         class="absolute top-0 right-80"
         @change="filterByDate"
       />
+      <span
+        @click="this.changeOrder('up')"
+        :class="[
+          'absolute top-0 right-190 hover:cursor-pointer',
+          orderUp === true ? 'text-blue-600' : 'text-black',
+        ]"
+      >
+        ▲
+      </span>
+      <button
+        @click="this.changeOrder('down')"
+        :class="[
+          'absolute top-0 right-185 hover:cursor-pointer',
+          orderUp === false ? 'text-blue-600' : 'text-black',
+        ]"
+      >
+        ▼
+      </button>
     </div>
     <ul class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
       <li v-for="(movie, index) in filteredMovies" :key="index">

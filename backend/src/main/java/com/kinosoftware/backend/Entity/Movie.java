@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -22,14 +23,9 @@ public class Movie {
     @Column(name = "titel")
     private String titel;
 
-//    @Column(name = "movie_date")
-//    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-//    private LocalDateTime movieDate;
 
     private String image;
 
-//    @ManyToOne
-//    @JoinColumn(name = "hall")
-//    private Hall hall;
-
+    @Column(name = "popularity")
+    private BigDecimal popularity;
 }

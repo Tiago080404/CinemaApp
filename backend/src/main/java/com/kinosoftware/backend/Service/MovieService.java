@@ -38,7 +38,7 @@ public class MovieService {
 
         List<AllMoviesWithDateDTO> movies = movieRepository.getAllMoviesWithDate();
         List<AllMoviesWithDateResponse> newCheck = new ArrayList<>();
-
+        System.out.println(movies);
         for (int i = 0; i < movies.size(); i++) {
             System.out.println("dafs" + movies.get(i));
             AllMoviesWithDateResponse existing = null;
@@ -55,6 +55,7 @@ public class MovieService {
                         movies.get(i).getMovieId(),
                         movies.get(i).getTitel(),
                         movies.get(i).getImage(),
+                        movies.get(i).getPopularity(),
                         new ArrayList<Date>()
                 );
                 newMovie.getShowDate().add(movies.get(i).getShowDate());
@@ -112,6 +113,7 @@ public class MovieService {
             newMovieApiDTO.setTitel(mp.getOriginal_title());
             newMovieApiDTO.setMovieDate(mp.getRelease_date());
             newMovieApiDTO.setImage(mp.getImage());
+            newMovieApiDTO.setPopularity(mp.getPopularity());
             insertMoviesFromApi(newMovieApiDTO);
         }
     }
@@ -142,6 +144,7 @@ public class MovieService {
             Movie movie = new Movie();
             movie.setTitel(newMovieApiDTO.getTitel());
             movie.setImage(newMovieApiDTO.getImage());
+            movie.setPopularity(newMovieApiDTO.getPopularity());
             Movie insertedMovie = movieRepository.save(movie);
             MovieShowTime movieShowTime = new MovieShowTime();
             movieShowTime.setMovie_id(insertedMovie);

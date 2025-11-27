@@ -3,6 +3,7 @@ package com.kinosoftware.backend.DTO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -15,4 +16,5 @@ public class NewMovieApiDTO {
     private LocalDate movieDate;
     private Long hall;//das vielleicht raus!!!!!
     private String image;
+    private BigDecimal popularity;
 }

@@ -287,17 +287,11 @@ public class ReservationService {
 
         Long diff = ChronoUnit.DAYS.between(reservationDate, movieShowTimeDate);
 
-        if (diff > 7) {
-            return false;
-        }
-        return true;
+        return diff <= 7;
     }
 
     public boolean checkSeatsReservationAmount(int ticketAmount) {
-        if (ticketAmount > 10) {
-            return false;
-        }
-        return true;
+        return ticketAmount <= 10;
     }
 
 
