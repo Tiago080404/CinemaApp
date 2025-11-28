@@ -135,45 +135,40 @@ export default {
       </div>
     </div>
   </div>
+  <div class="flex items-center justify-center gap-2">
+    <input
+      v-model="this.titelFilter"
+      type="text"
+      @change="filterByTitel"
+      class="rounded-lg bg-white border-black text-black"
+    />
+    <input v-model="this.dateFilter" type="date" @change="filterByDate" />
+    <span
+      @click="this.changeOrder('up')"
+      :class="[
+        'hover:cursor-pointer',
+        orderUp === true ? 'text-blue-600' : 'text-black',
+      ]"
+    >
+      ▲
+    </span>
+    <span
+      @click="this.changeOrder('down')"
+      :class="[
+        'hover:cursor-pointer',
+        orderUp === false ? 'text-blue-600' : 'text-black',
+      ]"
+    >
+      ▼
+    </span>
+  </div>
   <div class="flex justify-center mt-10">
-    <div>
-      <button
-        @click="newMovieInsert = true"
-        class="absolute top-0 right-1 bg-green-600 rounded-lg w-7 hover:bg-green-700"
-      >
-        +
-      </button>
-      <input
-        v-model="this.titelFilter"
-        type="text"
-        class="absolute top-0 right-20 bg-white text-black rounded-lg"
-        @change="filterByTitel"
-      />
-      <input
-        v-model="this.dateFilter"
-        type="date"
-        class="absolute top-0 right-80"
-        @change="filterByDate"
-      />
-      <span
-        @click="this.changeOrder('up')"
-        :class="[
-          'absolute top-0 right-190 hover:cursor-pointer',
-          orderUp === true ? 'text-blue-600' : 'text-black',
-        ]"
-      >
-        ▲
-      </span>
-      <button
-        @click="this.changeOrder('down')"
-        :class="[
-          'absolute top-0 right-185 hover:cursor-pointer',
-          orderUp === false ? 'text-blue-600' : 'text-black',
-        ]"
-      >
-        ▼
-      </button>
-    </div>
+    <button
+      @click="newMovieInsert = true"
+      class="absolute top-0 right-1 bg-green-600 rounded-lg w-7 hover:bg-green-700 hover:cursor-pointer"
+    >
+      +
+    </button>
     <ul class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
       <li v-for="(movie, index) in filteredMovies" :key="index">
         <div
