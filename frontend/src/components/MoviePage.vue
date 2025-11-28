@@ -27,8 +27,7 @@ export default {
   methods: {
     async getAllSeatsFromMovie(movieShowTimeId) {
       this.selected = true;
-      /* console.log(dateTimeObject);
-      this.movieHall = dateTimeObject.movieHall; */
+
       this.showTimeId = movieShowTimeId;
       const response = await fetch(
         `http://localhost:8080/movie/seats/${movieShowTimeId}`,
@@ -38,7 +37,6 @@ export default {
         }
       );
       const data = await response.json();
-      //console.log(data);
       await this.newTry(data);
     },
 
@@ -47,7 +45,6 @@ export default {
       let currentSeatsForRow = {};
       let currentRowNum = 1;
       for (let i = 0; i < data.length; i++) {
-        //console.log(data[i]);
         if (data[i].rowNum > currentRowNum) {
           seatObj[currentRowNum] = currentSeatsForRow;
           currentRowNum++;
@@ -63,7 +60,6 @@ export default {
     },
 
     async reservateSeats() {
-      console.log(this.clickedSeatsArray);
       try {
         const response = await fetch("http://localhost:8080/reservate", {
           method: "POST",
@@ -76,14 +72,13 @@ export default {
           }),
         });
         const data = await response.json();
-        console.log("res", data);
+
         this.clickedSeatsNum = 0;
         if (response.ok) {
           await this.getAllSeatsFromMovie(this.showTimeId);
           this.showSuccessMessage(data.message);
           this.clickedSeatsArray = [];
         } else {
-          console.log(data.message);
           this.showFailMessage(data.message);
           await this.getAllSeatsFromMovie(this.showTimeId);
         }
@@ -108,7 +103,6 @@ export default {
       });
     },
     changeSeatStatus(seatIndex, rowIndex) {
-      console.log(rowIndex, seatIndex);
       let clickedSeat = {};
       const row = this.seats[rowIndex];
       const currentSeatStatus = row[seatIndex];
@@ -135,7 +129,6 @@ export default {
           return;
         }
         row[seatIndex] = "onHold";
-        console.log(this.seats[rowIndex]);
         clickedSeat["row_num"] = rowIndex;
         clickedSeat["seat_num"] = seatIndex;
         this.clickedSeatsArray.push(clickedSeat);
@@ -146,16 +139,11 @@ export default {
           (item) => item.seat_num === seatIndex && item.rom_num === rowIndex
         );
         this.clickedSeatsArray.pop(itemToDelete);
-        console.log(this.clickedSeatsArray);
       }
-      console.log("aktuelle geklickte", this.clickedSeatsNum);
     },
   },
   async mounted() {
     this.username = localStorage.getItem("username");
-    // await this.getMovieById();
-    //await this.getAllSeatsFromMovie();
-    // await this.getAllShowsForMovie();
   },
 };
 </script>

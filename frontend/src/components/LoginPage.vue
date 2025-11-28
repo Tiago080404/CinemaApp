@@ -7,8 +7,6 @@ export default {
   },
   methods: {
     sendLogInData() {
-      console.log("SAFSA");
-      console.log(this.username);
       this.$emit("log-in", this.username);
     },
   },

@@ -21,7 +21,7 @@ export default {
         headers: { "Content-Type": "application/json" },
       });
       const data = await response.json();
-      console.log(data);
+
       this.movies = data;
       this.filteredMovies = data;
     },
@@ -48,23 +48,19 @@ export default {
             position: "top-right",
             duration: 3000,
           });
-          console.log("New movie added");
         }
       } catch (err) {
         console.log(err);
       }
     },
     filterByTitel() {
-      console.log(this.titelFilter);
       this.filteredMovies = this.movies.filter((movie) =>
         movie.titel.toLowerCase().includes(this.titelFilter.toLowerCase())
       );
     },
     filterByDate() {
-      console.log("date", this.dateFilter, this.movies[1].showDate);
       if (this.dateFilter === "") {
         this.filteredMovies = this.movies;
-        console.log(this.filteredMovies);
         return;
       }
       this.filteredMovies = [];
@@ -78,13 +74,11 @@ export default {
     },
     changeOrder(orderOption) {
       if (orderOption === "up") {
-        console.log(this.movies.sort((a, b) => a.popularity - b.popularity));
         this.filteredMovies = this.movies.sort(
           (a, b) => a.popularity - b.popularity
         );
         this.orderUp = !this.orderUp;
       } else {
-        console.log(this.movies.sort((a, b) => b.popularity - a.popularity));
         this.filteredMovies = this.movies.sort(
           (a, b) => b.popularity - a.popularity
         );

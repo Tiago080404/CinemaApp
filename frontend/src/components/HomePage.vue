@@ -12,16 +12,13 @@ export default {
   components: { HallRoom, LoginPage },
   methods: {
     goToMovie(movie) {
-      console.log(movie.movieId);
       const id = movie.movieId;
       this.$router.push({ name: "MoviePage", params: { id } });
     },
     logginIn(username) {
       localStorage.setItem("username", username);
-      console.log(username);
       this.user = username;
       this.loggedIn = true;
-      console.log(this.user);
     },
   },
   mounted() {

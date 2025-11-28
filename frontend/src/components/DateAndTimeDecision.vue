@@ -25,11 +25,11 @@ export default {
           }
         );
         const data = await response.json();
+
         this.allShowsData = data.showTimes;
-        console.log(data);
         this.movieHall = data.showTimes[0].hall.hallId;
+
         for (const showTime of data.showTimes) {
-          console.log("dasdafsd", showTime.show_date);
           if (this.movieShowDateAndTime[showTime.show_date]) {
             this.movieShowDateAndTime[showTime.show_date].push(
               showTime.show_time
@@ -46,7 +46,7 @@ export default {
       }
     },
     dateAndTimeClicked(date, time) {
-      console.log(this.allShowsData);
+
       let movieShowTimeId = null;
       for (const ele of this.allShowsData) {
         if (ele.show_date === date && ele.show_time === time) {
