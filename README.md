@@ -1,14 +1,11 @@
 # 🎬 Cinefy
 
 **Cinefy** is a personal movie reservation tool that allows users to reserve seats for specific movies.  
-It is designed to provide a **simple**, **intuitive**, and **efficient** experience for cinema-goers. 🍿
-
 ---
 
-
-
+![Alt-Text](/frontend/src/assets/movies.png)
 ---
-
+![Alt-Text](/frontend/src/assets/seats.png)
 ## ⚙️ Installation & Setup
 
 ### 1. **Clone the Repository**
@@ -29,7 +26,7 @@ cd backend
 Start your Spring Boot application.
 🧱 Tech Stack
 Layer	Technology
-🎨 Frontend	Vue.js
-⚙️ Backend	Spring Boot
-🗄️ Database	PostgreSQL
-💅 Styling	Tailwind CSS
+Frontend	Vue.js
+Backend	Spring Boot
+Database	PostgreSQL
+Styling	Tailwind CSS

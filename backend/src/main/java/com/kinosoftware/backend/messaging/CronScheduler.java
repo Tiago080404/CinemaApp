@@ -25,7 +25,7 @@ public class CronScheduler {
     public void scheduleEmailSend() {
         System.out.println("cron triggered!!!");
         int everyReservation = reservationService.thisDayReservations();
-        mailService.sendEmail("tiago.antolagic.duarte0804@gmail.com", "Reservierungen in total", "Hallo, so viele Reservierung gesamt heute:" + new Date() + everyReservation);
+        mailService.sendEmail("tiago.antolagic-duarte@telefonica.com", "Reservierungen in total", "Hallo, so viele Reservierung gesamt heute:" + new Date() + everyReservation);
     }
     @Scheduled(cron = "0 0 9 * * Mon")
     public void scheduleInsertNewMoviesAndShowTimes(){
