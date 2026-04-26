@@ -18,7 +18,7 @@ export default {
     async getAllShowsForMovie() {
       try {
         const response = await fetch(
-          `http://localhost:8080/movie/all/${this.id}`,
+          `${import.meta.env.VITE_BACKEND_URL}/movie/all/${this.id}`,
           {
             method: "GET",
             headers: { "Content-Type": "application/json" },

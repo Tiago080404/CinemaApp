@@ -16,7 +16,7 @@ export default {
   },
   methods: {
     async getMovies() {
-      const response = await fetch("http://localhost:8080/movie", {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/movie`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
       });
@@ -31,7 +31,7 @@ export default {
     async insertNewMovie() {
       const convertedDate = this.movieDate + "T" + this.movieTime + ":00";
       try {
-        const response = await fetch("http://localhost:8080/movie/insert", {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/movie/insert`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({

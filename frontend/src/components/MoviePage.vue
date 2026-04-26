@@ -27,14 +27,13 @@ export default {
   methods: {
     async getAllSeatsFromMovie(movieShowTimeId) {
       this.selected = true;
-
       this.showTimeId = movieShowTimeId;
       const response = await fetch(
-        `http://localhost:8080/movie/seats/${movieShowTimeId}`,
+        `${import.meta.env.VITE_BACKEND_URL}/movie/seats/${movieShowTimeId}`,
         {
           method: "GET",
           headers: { "Content-Type": "application/json" },
-        }
+        },
       );
       const data = await response.json();
       await this.newTry(data);
@@ -61,16 +60,19 @@ export default {
 
     async reservateSeats() {
       try {
-        const response = await fetch("http://localhost:8080/reservate", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            customerName: this.username,
-            reservationTime: new Date(),
-            showTimeId: this.showTimeId,
-            seats: this.clickedSeatsArray,
-          }),
-        });
+        const response = await fetch(
+          `${import.meta.env.VITE_BACKEND_URL}/reservate`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              customerName: this.username,
+              reservationTime: new Date(),
+              showTimeId: this.showTimeId,
+              seats: this.clickedSeatsArray,
+            }),
+          },
+        );
         const data = await response.json();
 
         this.clickedSeatsNum = 0;
@@ -136,7 +138,7 @@ export default {
         row[seatIndex] = null;
         this.clickedSeatsNum -= 1;
         const itemToDelete = this.clickedSeatsArray.filter(
-          (item) => item.seat_num === seatIndex && item.rom_num === rowIndex
+          (item) => item.seat_num === seatIndex && item.rom_num === rowIndex,
         );
         this.clickedSeatsArray.pop(itemToDelete);
       }
@@ -184,8 +186,8 @@ export default {
           seat === 'onHold'
             ? 'bg-blue-600 hover:bg-blue-500'
             : seat == null
-            ? 'bg-green-600 hover:bg-green-400'
-            : 'bg-red-600 hover:bg-red-400',
+              ? 'bg-green-600 hover:bg-green-400'
+              : 'bg-red-600 hover:bg-red-400',
         ]"
         @click="changeSeatStatus(seatIndex, rowIndex)"
       >
